@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function LoginPage() {
   return (
     <div className="h-full flex items-center justify-center">
-      <div className="flex flex-col mx-4 md:mx-0 md:w-1/4 px-16 py-10 space-y-5 items-center border-2 rounded-sm">
+      <div className="flex flex-col mx-4 md:mx-0 md:w-1/4 px-12 py-10 space-y-5 items-center border-2 rounded-sm">
         <p className="text-4xl font-bold py-5">Login</p>
         <input
           type="text"
