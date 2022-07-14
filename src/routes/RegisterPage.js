@@ -69,7 +69,7 @@ export default function RegisterPage() {
 
     // check for full name
     if (values.fullName.length <= 6) {
-      errorObject.fullName = "Please your full name";
+      errorObject.fullName = "Please enter your full name";
     } else {
       errorObject.fullName = null;
     }
@@ -83,7 +83,7 @@ export default function RegisterPage() {
 
     // check for sex
     if (sex.length === 0) {
-      errorObject.sex = "Select your gender";
+      errorObject.sex = "Please select your gender";
     } else {
       errorObject.sex = null;
     }
@@ -213,7 +213,7 @@ export default function RegisterPage() {
                 value={values.number}
                 onChange={handleInputChange}
                 placeholder="Age"
-                className="py-2 px-3 w-1/2 md:w-full focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
+                className="py-2 px-3 w-4/5 md:w-full focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
               />
               {errors.age ? (
                 <p className="text-red-500 font-semibold self-start">
