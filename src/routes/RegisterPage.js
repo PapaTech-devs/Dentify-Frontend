@@ -1,38 +1,160 @@
 import React, { useState } from "react";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/contextHooks";
 
 export default function RegisterPage() {
   const initialValues = {
     fullName: "",
     email: "",
     age: "",
-    organization: "",
     password: "",
     confirmPassword: "",
   };
 
+  const { createUser } = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [errors, setError] = useState({
+    fullName: null,
+    email: null,
+    age: null,
+    password: null,
+    confirmPassword: null,
+    mobileNumber: null,
+    sex: null,
+    organization: null,
+  });
   const [values, setValues] = useState(initialValues);
   const [mobileNumber, setMobileNumber] = useState("");
   const [sex, setSex] = useState("");
+  const [organization, setOrganization] = useState("");
 
   const handleInputChange = (e) => {
-    console.log("Hi");
     const { name, value } = e.target;
     setValues({
       ...values,
       [name]: value,
     });
   };
-  const handleSubmit = (e) => {
-    console.log("Form submit", values, sex, mobileNumber);
+
+  const validateEmail = (email) => {
+    // eslint-disable-next-line
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+      email.toLowerCase()
+    );
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const errorObject = {
+      fullName: null,
+      email: null,
+      age: null,
+      password: null,
+      confirmPassword: null,
+      mobileNumber: null,
+      sex: null,
+      organization: null,
+    };
+
+    // check for email
+    if (!validateEmail(values.email)) {
+      errorObject.email = "Enter a valid email";
+    } else {
+      errorObject.email = null;
+    }
+
+    // check for full name
+    if (values.fullName.length <= 6) {
+      errorObject.fullName = "Please your full name";
+    } else {
+      errorObject.fullName = null;
+    }
+
+    // check for mobile number
+    if (!mobileNumber) {
+      errorObject.mobileNumber = "Please enter your mobile number";
+    } else {
+      errorObject.mobileNumber = null;
+    }
+
+    // check for sex
+    if (sex.length === 0) {
+      errorObject.sex = "Select your gender";
+    } else {
+      errorObject.sex = null;
+    }
+
+    // check for age
+    if (values.age.toString().length === 0) {
+      errorObject.age = "Please enter your age";
+    } else {
+      errorObject.age = null;
+    }
+
+    // check for organization
+    if (organization.length === 0) {
+      errorObject.organization = "Please select your organization";
+    } else {
+      errorObject.organization = null;
+    }
+
+    // check for password
+    if (values.password.length <= 6) {
+      errorObject.password = "Please enter a password of length 7 or more";
+    } else {
+      errorObject.password = null;
+    }
+
+    // check for confirm password
+    if (values.confirmPassword.length === 0) {
+      errorObject.confirmPassword = "Please enter your password again";
+    } else if (values.confirmPassword !== values.password) {
+      errorObject.confirmPassword = "Passwords doesn't match.";
+    } else {
+      errorObject.confirmPassword = null;
+    }
+    setError(errorObject);
+    if (
+      errorObject.email ||
+      errorObject.confirmPassword ||
+      errorObject.age ||
+      errorObject.fullName ||
+      errorObject.mobileNumber ||
+      errorObject.organization ||
+      errorObject.password ||
+      errorObject.sex
+    ) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await createUser(values.email, values.password);
+      setLoading(false);
+      navigate("/", { replace: true });
+    } catch (e) {
+      switch (e.code) {
+        case "auth/email-already-in-use":
+          errorObject.email = "User with this email already exists.";
+          break;
+        case "auth/weak-password":
+          errorObject.password = "Try a stronger password.";
+          break;
+        default:
+          errorObject.email = "Internal server error.";
+      }
+      setError(errorObject);
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="h-full flex items-center justify-center">
-      <div className="flex flex-col mx-4 md:mx-0 px-12 py-10 md:w-1/4 space-y-4 items-center border-2 rounded-sm">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="flex flex-col mx-4 my-8 md:mx-0 px-12 py-10 md:w-2/5 space-y-4 items-center border-2 rounded-sm">
         <p className="text-4xl font-bold pb-8">Register</p>
         <form
           onSubmit={handleSubmit}
@@ -46,6 +168,13 @@ export default function RegisterPage() {
             placeholder="John Doe"
             className="py-2 px-3 focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
           />
+          {errors.fullName ? (
+            <p className="text-red-500 font-semibold self-start">
+              {errors.fullName}
+            </p>
+          ) : (
+            <></>
+          )}
           <input
             type="text"
             name="email"
@@ -54,33 +183,85 @@ export default function RegisterPage() {
             placeholder="johndoe@gmail.com"
             className="py-2 px-3 focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
           />
+          {errors.email ? (
+            <p className="text-red-500 font-semibold self-start">
+              {errors.email}
+            </p>
+          ) : (
+            <></>
+          )}
           <PhoneInput
             name="mobileNumber"
-            placeholder="+91 9876543210"
+            placeholder="9876543210"
+            style={{ fontSize: "18px" }}
             value={mobileNumber}
             onChange={setMobileNumber}
             className="p-2"
           />
+          {errors.mobileNumber ? (
+            <p className="text-red-500 font-semibold self-start">
+              {errors.mobileNumber}
+            </p>
+          ) : (
+            <></>
+          )}
           <div className="flex justify-between items-center">
-            <input
-              type="number"
-              name="age"
-              value={values.number}
-              onChange={handleInputChange}
-              placeholder="Age"
-              className="py-2 px-3 w-5/12 focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
-            />
-            <select
-              className="py-2 px-3 w-5/12 focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
-              name="sex"
-              value={sex}
-              onChange={(e) => setSex(e.target.value)}
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="others">Others</option>
-            </select>
+            <div className="md:w-5/12">
+              <input
+                type="number"
+                name="age"
+                value={values.number}
+                onChange={handleInputChange}
+                placeholder="Age"
+                className="py-2 px-3 w-1/2 md:w-full focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
+              />
+              {errors.age ? (
+                <p className="text-red-500 font-semibold self-start">
+                  {errors.age}
+                </p>
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className="md:w-5/12">
+              <select
+                className="py-2 px-3 md:w-full focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
+                name="sex"
+                value={sex}
+                onChange={(e) => setSex(e.target.value)}
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="others">Others</option>
+              </select>
+              {errors.sex ? (
+                <p className="text-red-500 font-semibold self-start">
+                  {errors.sex}
+                </p>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
+          <select
+            className="py-2 px-3 w-full focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
+            name="organization"
+            value={organization}
+            onChange={(e) => setOrganization(e.target.value)}
+          >
+            <option value="">Select Organization</option>
+            <option value="organization1">Organization A</option>
+            <option value="organization2">Organization B</option>
+            <option value="organization3">Organization C</option>
+          </select>
+          {errors.organization ? (
+            <p className="text-red-500 font-semibold self-start">
+              {errors.organization}
+            </p>
+          ) : (
+            <></>
+          )}
           <input
             type="password"
             name="password"
@@ -89,6 +270,13 @@ export default function RegisterPage() {
             placeholder="Password"
             className="py-2 px-3 focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
           />
+          {errors.password ? (
+            <p className="text-red-500 font-semibold self-start">
+              {errors.password}
+            </p>
+          ) : (
+            <></>
+          )}
           <input
             type="password"
             name="confirmPassword"
@@ -97,18 +285,44 @@ export default function RegisterPage() {
             placeholder="Confirm Password"
             className="py-2 px-3 focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
           />
-          <input
-            className="py-2 px-3 bg-green-500 w-full text-white text-lg font-semibold rounded-sm"
-            value="Submit"
-            type="submit"
-          />
+          {errors.confirmPassword ? (
+            <p className="text-red-500 font-semibold self-start">
+              {errors.confirmPassword}
+            </p>
+          ) : (
+            <></>
+          )}
+          {loading ? (
+            <input
+              value="Submit"
+              type="submit"
+              disabled
+              className="py-2 px-3 cursor-pointer bg-green-500 w-full disabled:bg-slate-300  text-white text-lg font-semibold rounded-sm"
+            />
+          ) : (
+            <input
+              value="Submit"
+              type="submit"
+              className="py-2 px-3 cursor-pointer bg-green-500 w-full text-white text-lg font-semibold rounded-sm"
+            />
+          )}
         </form>
-        <Link
-          to="/login"
-          className="py-2 px-3 w-full text-center text-gray-500 underline text-lg font-semibold rounded-sm"
-        >
-          Already have an account?
-        </Link>
+        {loading ? (
+          <Link
+            to="/login"
+            disabled
+            className="py-2 px-3 w-full text-center disabled:text-gray-300  text-gray-500 underline text-lg font-semibold rounded-sm"
+          >
+            Already have an account?
+          </Link>
+        ) : (
+          <Link
+            to="/login"
+            className="py-2 px-3 w-full text-center text-gray-500 underline text-lg font-semibold rounded-sm"
+          >
+            Already have an account?
+          </Link>
+        )}
       </div>
     </div>
   );
