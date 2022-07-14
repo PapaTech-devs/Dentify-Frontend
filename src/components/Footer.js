@@ -10,12 +10,12 @@ export default function Footer() {
       <p className="text-white text-2xl font-bold self-start">Contacts</p>
       <div className="w-1/2 md:w-1/3 space-y-5">
         <div className="flex space-x-2">
-          <a href="#">
+          <button>
             <FacebookLogo fill="white" height="35px" width="35px" />
-          </a>
-          <a href="#">
+          </button>
+          <button>
             <InstagramLogo fill="white" height="35px" width="35px" />
-          </a>
+          </button>
         </div>
         <div className="flex">
           <GmailLogo className="ml-1" fill="white" width="35px" />
