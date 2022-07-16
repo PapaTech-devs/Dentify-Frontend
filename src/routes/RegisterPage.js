@@ -11,6 +11,8 @@ export default function RegisterPage() {
     age: "",
     password: "",
     confirmPassword: "",
+    designation: "",
+    registrationNo: "",
   };
 
   const { createUser } = useAuth();
@@ -25,11 +27,14 @@ export default function RegisterPage() {
     mobileNumber: null,
     sex: null,
     organization: null,
+    registrationNo: null,
+    designation: null,
   });
   const [values, setValues] = useState(initialValues);
   const [mobileNumber, setMobileNumber] = useState("");
   const [sex, setSex] = useState("");
   const [organization, setOrganization] = useState("");
+  const [doctor, setDoctor] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,6 +63,8 @@ export default function RegisterPage() {
       mobileNumber: null,
       sex: null,
       organization: null,
+      registrationNo: null,
+      designation: null,
     };
 
     // check for email
@@ -113,9 +120,22 @@ export default function RegisterPage() {
     if (values.confirmPassword.length === 0) {
       errorObject.confirmPassword = "Please enter your password again";
     } else if (values.confirmPassword !== values.password) {
-      errorObject.confirmPassword = "Passwords doesn't match.";
+      errorObject.confirmPassword = "Passwords doesn't match";
     } else {
       errorObject.confirmPassword = null;
+    }
+
+    // check for doctor details
+    if (doctor && values.designation.length === 0) {
+      errorObject.designation = "Please enter your designations";
+    } else {
+      errorObject.designation = null;
+    }
+
+    if (doctor && values.registrationNo.length === 0) {
+      errorObject.registrationNo = "Please enter your registration number";
+    } else {
+      errorObject.registrationNo = null;
     }
     setError(errorObject);
     if (
@@ -126,7 +146,8 @@ export default function RegisterPage() {
       errorObject.mobileNumber ||
       errorObject.organization ||
       errorObject.password ||
-      errorObject.sex
+      errorObject.sex ||
+      (doctor && (errorObject.designation || errorObject.registrationNo))
     ) {
       return;
     }
@@ -176,7 +197,7 @@ export default function RegisterPage() {
             <></>
           )}
           <input
-            type="text"
+            type="email"
             name="email"
             value={values.email}
             onChange={handleInputChange}
@@ -261,6 +282,48 @@ export default function RegisterPage() {
             </p>
           ) : (
             <></>
+          )}
+          <div className="flex space-x-4 items-center">
+            <p className="text-lg">Are you a doctor?</p>
+            <input
+              type="checkbox"
+              className="w-4 h-4"
+              onChange={() => setDoctor(!doctor)}
+            />
+          </div>
+          {doctor && (
+            <>
+              <input
+                type="text"
+                name="designation"
+                value={values.designation}
+                onChange={handleInputChange}
+                placeholder="Your designation"
+                className="py-2 px-3 focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
+              />
+              {errors.designation ? (
+                <p className="text-red-500 font-semibold self-start">
+                  {errors.designation}
+                </p>
+              ) : (
+                <></>
+              )}
+              <input
+                type="text"
+                name="registrationNo"
+                value={values.registrationNo}
+                onChange={handleInputChange}
+                placeholder="Your registration number"
+                className="py-2 px-3 focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
+              />
+              {errors.registrationNo ? (
+                <p className="text-red-500 font-semibold self-start">
+                  {errors.registrationNo}
+                </p>
+              ) : (
+                <></>
+              )}
+            </>
           )}
           <input
             type="password"
