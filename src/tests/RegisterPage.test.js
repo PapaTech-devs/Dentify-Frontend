@@ -11,6 +11,8 @@ test("Register error messages are working correctly or not.", async () => {
   );
 
   const registerButton = screen.getByRole("button", { name: /submit/i });
+
+  // general error checks
   fireEvent.click(registerButton);
 
   let nameError = screen.getByText("Please enter your full name");
@@ -53,4 +55,16 @@ test("Register error messages are working correctly or not.", async () => {
   expect(genderError).toBeDefined();
   expect(organizationError).toBeDefined();
   expect(confirmPasswordError).toBeDefined();
+
+  // Doctor details check box
+  fireEvent.click(screen.getByRole("checkbox"));
+  expect(screen.getByPlaceholderText("Your designation")).toBeDefined();
+  expect(screen.getByPlaceholderText("Your registration number")).toBeDefined();
+
+  fireEvent.click(registerButton);
+  let designationError = screen.getByText("Please enter your designations");
+  let regNoError = screen.getByText("Please enter your registration number");
+
+  expect(designationError).toBeDefined();
+  expect(regNoError).toBeDefined();
 });
