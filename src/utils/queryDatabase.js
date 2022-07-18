@@ -1,4 +1,3 @@
-// const users = require("../data/mockDatabase");
 const URL = "https://dentify001.herokuapp.com";
 export async function getUser(uid) {
   // do API requests here
