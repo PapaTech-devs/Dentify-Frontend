@@ -4,6 +4,7 @@ import useFirebaseAuth from "../firebase/client";
 const authUserContext = createContext({
   authUser: null,
   loading: true,
+  setAuthUser: () => {},
   signIn: async () => {},
   createUser: async () => {},
   signMeOut: async () => {},

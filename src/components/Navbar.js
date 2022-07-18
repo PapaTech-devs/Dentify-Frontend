@@ -20,11 +20,8 @@ export default function Navbar() {
           </Link>
         </div>
       ) : (
-        <div className="flex md:w-5/12 justify-between md:px-10 items-center">
-          <p className="text-base mr-5">
-            Welcome {authUser ? authUser.email : ""}
-          </p>
-          <Link className="text-lg mr-5" to="/dashboard">
+        <div className="flex md:w-2/12 justify-between items-center">
+          <Link className="text-lg mr-3" to="/dashboard">
             Dashboard
           </Link>
           <button onClick={() => signMeOut()} className="text-lg">

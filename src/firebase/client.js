@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { useState, useEffect } from "react";
+import { getUser } from "../utils/queryDatabase";
 
 const FirebaseCredentials = {
   apiKey: process.env.REACT_APP_FIREBASE_PUBLIC_API_KEY,
@@ -21,10 +22,10 @@ const FirebaseCredentials = {
 // if a Firebase instance doesn't exist, create one
 firebase.initializeApp(FirebaseCredentials);
 
-const formatAuthUser = (user) => ({
-  uid: user.uid,
-  email: user.email,
-});
+const formatAuthUser = async (user) => {
+  const currUser = await getUser(user.uid);
+  return currUser;
+};
 
 export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState(null);
@@ -39,7 +40,7 @@ export default function useFirebaseAuth() {
     }
 
     setLoading(true);
-    var formattedUser = formatAuthUser(authState);
+    var formattedUser = await formatAuthUser(authState);
     setAuthUser(formattedUser);
     setLoading(false);
   };
@@ -67,6 +68,7 @@ export default function useFirebaseAuth() {
     authUser,
     loading,
     signIn,
+    setAuthUser,
     createUser,
     signMeOut,
   };
