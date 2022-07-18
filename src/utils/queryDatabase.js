@@ -1,9 +1,9 @@
 // const users = require("../data/mockDatabase");
-// const URL = process.env.REACT_APP_BACKEND_URL;
+const URL = "https://dentify001.herokuapp.com";
 export async function getUser(uid) {
   // do API requests here
   try {
-    const response = await fetch(`/users/${uid}`, {
+    const response = await fetch(`${URL}/users/${uid}`, {
       method: "GET",
       headers: {
         Accept: "*/*",
@@ -17,14 +17,14 @@ export async function getUser(uid) {
 }
 
 export async function getAllUsers() {
-  const response = await fetch("/users/");
+  const response = await fetch(`${URL}/users/`);
   const data = await response.json();
   return data;
 }
 
 export async function updateUser(uid, key, value) {
   console.log(key, value);
-  const response = await fetch(`/users/${uid}`, {
+  const response = await fetch(`${URL}/users/${uid}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
