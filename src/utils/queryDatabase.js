@@ -15,6 +15,34 @@ export async function getUser(uid) {
   }
 }
 
+export async function storeUser(props) {
+  let data = {};
+  data["userid"] = props.userid;
+  data["name"] = props.fullName;
+  data["email"] = props.email;
+  data["mobile_number"] = props.mobileNumber;
+  data["age"] = props.age;
+  data["sex"] = props.sex;
+  data["organization"] = props.organization;
+  data["role"] = props.role;
+  if (props.role.includes("doctor")) {
+    data["designation"] = props.designation;
+    data["registration_number"] = props.registrationNo;
+  }
+  try {
+    await fetch(`${URL}/users`, {
+      method: "POST",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 export async function getAllUsers() {
   try {
     const response = await fetch(`${URL}/users/`);

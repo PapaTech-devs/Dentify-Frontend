@@ -23,8 +23,13 @@ const FirebaseCredentials = {
 firebase.initializeApp(FirebaseCredentials);
 
 const formatAuthUser = async (user) => {
-  const currUser = await getUser(user.uid);
-  return currUser;
+  try {
+    const currUser = await getUser(user.uid);
+    console.log(currUser);
+    return currUser;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export default function useFirebaseAuth() {
@@ -39,6 +44,7 @@ export default function useFirebaseAuth() {
       return;
     }
 
+    console.log("Authstate", authState);
     setLoading(true);
     var formattedUser = await formatAuthUser(authState);
     setAuthUser(formattedUser);
@@ -50,7 +56,8 @@ export default function useFirebaseAuth() {
   };
 
   const createUser = async (email, password) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const data = await createUserWithEmailAndPassword(auth, email, password);
+    return data.user.uid;
   };
 
   const signMeOut = async () => {
