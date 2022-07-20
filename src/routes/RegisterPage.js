@@ -3,6 +3,7 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/contextHooks";
+import { storeUser } from "../utils/queryDatabase";
 
 export default function RegisterPage() {
   const initialValues = {
@@ -154,7 +155,13 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await createUser(values.email, values.password);
+      values.mobileNumber = mobileNumber;
+      values.organization = organization;
+      values.sex = sex;
+      values.role = doctor ? ["doctor"] : ["moderator"];
+      const userid = await createUser(values.email, values.password);
+      values.userid = userid;
+      await storeUser(values);
       setLoading(false);
       navigate("/", { replace: true });
     } catch (e) {

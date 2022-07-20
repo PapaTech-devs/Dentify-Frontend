@@ -4,6 +4,7 @@ import { useAuth } from "../hooks/contextHooks";
 import { useUserData } from "../hooks/userHooks";
 import ApprovedMembers from "./ApprovedMembers";
 import UnapprovedMembers from "./UnapprovedMembers";
+import { AiFillWarning, AiOutlineClose } from "react-icons/ai";
 
 export default function ShowOrganization() {
   const { authUser } = useAuth();
@@ -20,6 +21,10 @@ export default function ShowOrganization() {
       setUnapprovedList(list.filter((user) => !user.approved));
     }
     if (userData.length === 0) fetchUsers();
+    else {
+      setApprovedList(userData.filter((user) => user.approved));
+      setUnapprovedList(userData.filter((user) => !user.approved));
+    }
     //eslint-disable-next-line
   }, []);
 
@@ -37,17 +42,21 @@ export default function ShowOrganization() {
           </p>
           {!applicants ? (
             <button
-              className="text-lg py-1 px-2 bg-green-300 rounded"
+              className="text-lg py-1 px-2 bg-green-300 rounded flex items-center"
               onClick={() => setApplicants(true)}
             >
               Applicants
+              {unApprovedList.length !== 0 && (
+                <AiFillWarning fill="red" className="ml-1" />
+              )}
             </button>
           ) : (
             <button
-              className="text-lg py-1 px-2 bg-red-300 rounded"
+              className="text-lg py-1 px-2 bg-red-300 rounded flex items-center"
               onClick={() => setApplicants(false)}
             >
               Close
+              <AiOutlineClose className="ml-1" />
             </button>
           )}
         </div>

@@ -4,10 +4,13 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const { authUser, signMeOut, loading } = useAuth();
+  console.log(authUser);
 
   if (loading)
     return (
-      <nav className="h-20 bg-gray-300 flex items-center justify-between px-4 md:px-10"></nav>
+      <nav className="h-20 bg-gray-300 flex items-center justify-between px-4 md:px-10">
+        <p>Loading please wait</p>
+      </nav>
     );
 
   return (
