@@ -1,61 +1,62 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getAllUsers } from "../utils/queryDatabase";
 import { useAuth } from "../hooks/contextHooks";
-import ShowUser from "./ShowUser";
 import { useUserData } from "../hooks/userHooks";
+import ApprovedMembers from "./ApprovedMembers";
+import UnapprovedMembers from "./UnapprovedMembers";
 
 export default function ShowOrganization() {
   const { authUser } = useAuth();
   const [userData, setUserData] = useUserData();
+  const [applicants, setApplicants] = useState(false);
+  const [approvedList, setApprovedList] = useState([]);
+  const [unApprovedList, setUnapprovedList] = useState([]);
 
   useEffect(() => {
     async function fetchUsers() {
       const list = await getAllUsers();
       setUserData(list);
+      setApprovedList(list.filter((user) => user.approved));
+      setUnapprovedList(list.filter((user) => !user.approved));
     }
-    fetchUsers();
-    // eslint-disable-next-line
+    if (userData.length === 0) fetchUsers();
+    //eslint-disable-next-line
   }, []);
 
   return (
     <div className="w-full h-full p-8 space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-3xl font-bold">Tulip Medical Organization</p>
-        <p className="text-lg mr-3">
-          Welcome{" "}
-          {authUser &&
-            `${authUser.role.includes("doctor") ? "Dr." : "Mr."}${
-              authUser.name.split(" ")[0]
-            }${authUser.role.includes("admin") ? "(Admin)" : ""}`}
-        </p>
+        <div className="flex items-center mr-3 space-x-3">
+          <p className="text-lg">
+            Welcome{" "}
+            {authUser &&
+              `${authUser.role.includes("doctor") ? "Dr." : "Mr."}${
+                authUser.name.split(" ")[0]
+              }${authUser.role.includes("admin") ? "(Admin)" : ""}`}
+          </p>
+          {!applicants ? (
+            <button
+              className="text-lg py-1 px-2 bg-green-300 rounded"
+              onClick={() => setApplicants(true)}
+            >
+              Applicants
+            </button>
+          ) : (
+            <button
+              className="text-lg py-1 px-2 bg-red-300 rounded"
+              onClick={() => setApplicants(false)}
+            >
+              Close
+            </button>
+          )}
+        </div>
       </div>
-      <p className="text-xl font-semibold">Admins</p>
-      <div className="grid gap-4 grid-cols-2">
-        {userData.length > 0 &&
-          userData
-            .filter((user) => user.role.includes("admin"))
-            .map((user, index) => (
-              <ShowUser user={user} key={`${user.userid + index}`} />
-            ))}
-      </div>
-      <p className="text-xl font-semibold">Your Doctors</p>
-      <div className="grid gap-4 grid-cols-2">
-        {userData.length > 0 &&
-          userData
-            .filter((user) => user.role.includes("doctor"))
-            .map((user, index) => (
-              <ShowUser user={user} key={`${user.userid + index}`} />
-            ))}
-      </div>
-      <p className="text-xl font-semibold">Your Moderators</p>
-      <div className="grid gap-4 grid-cols-2">
-        {userData.length > 0 &&
-          userData
-            .filter((user) => user.role.includes("moderator"))
-            .map((user, index) => (
-              <ShowUser user={user} key={`${user.userid + index}`} />
-            ))}
-      </div>
+      {!applicants ? (
+        <ApprovedMembers userList={approvedList} />
+      ) : (
+        <UnapprovedMembers userList={unApprovedList} />
+      )}
     </div>
   );
 }

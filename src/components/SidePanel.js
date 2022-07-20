@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function SidePanel({ index, setIndex }) {
-  console.log(index);
   return (
     <div className="min-h-screen w-64 bg-slate-700 flex flex-col items-center space-y-4 py-6">
       <div

@@ -14,6 +14,7 @@ export default function ShowUser({ user }) {
   const [roleChange, setRoleChange] = useState(false);
   const [newRoles, setNewRoles] = useState([]);
   const [userData, setUserData] = useUserData();
+  const [error, setError] = useState(null);
 
   return (
     <div className="bg-gray-100 p-4 rounded-md flex justify-between">
@@ -38,6 +39,7 @@ export default function ShowUser({ user }) {
       </div>
       <div className="w-2/5 space-y-1">
         <p className="text-xl font-semibold">Roles</p>
+        {error && <p className="text-red-500 font-semibold text-sm">{error}</p>}
         {authUser.role.includes("admin") ? (
           <Select
             isMulti
@@ -45,12 +47,17 @@ export default function ShowUser({ user }) {
             isSearchable={false}
             onChange={(text) => {
               let arr = text.map((data) => data.value);
-              if (arr.toString() !== myRoles.toString()) {
-                setRoleChange(true);
-                setNewRoles(arr);
+              if (arr.length === 0) {
+                setError("User without a role cannot exist.");
               } else {
-                setRoleChange(false);
-                setNewRoles([]);
+                setError(null);
+                if (arr.toString() !== myRoles.toString()) {
+                  setRoleChange(true);
+                  setNewRoles(arr);
+                } else {
+                  setRoleChange(false);
+                  setNewRoles([]);
+                }
               }
             }}
             value={user.role.map((role) => {
