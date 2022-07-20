@@ -4,7 +4,8 @@ import { useAuth } from "../hooks/contextHooks";
 import { useUserData } from "../hooks/userHooks";
 import ApprovedMembers from "./ApprovedMembers";
 import UnapprovedMembers from "./UnapprovedMembers";
-import { AiFillWarning, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
+import { BsFillStarFill } from "react-icons/bs";
 
 export default function ShowOrganization() {
   const { authUser } = useAuth();
@@ -40,25 +41,26 @@ export default function ShowOrganization() {
                 authUser.name.split(" ")[0]
               }${authUser.role.includes("admin") ? "(Admin)" : ""}`}
           </p>
-          {!applicants ? (
-            <button
-              className="text-lg py-1 px-2 bg-green-300 rounded flex items-center"
-              onClick={() => setApplicants(true)}
-            >
-              Applicants
-              {unApprovedList.length !== 0 && (
-                <AiFillWarning fill="red" className="ml-1" />
-              )}
-            </button>
-          ) : (
-            <button
-              className="text-lg py-1 px-2 bg-red-300 rounded flex items-center"
-              onClick={() => setApplicants(false)}
-            >
-              Close
-              <AiOutlineClose className="ml-1" />
-            </button>
-          )}
+          {authUser.role.includes("admin") &&
+            (!applicants ? (
+              <button
+                className="text-lg py-1 px-2 bg-green-200 rounded flex items-center"
+                onClick={() => setApplicants(true)}
+              >
+                Applicants
+                {unApprovedList.length !== 0 && (
+                  <BsFillStarFill fill="orange" className="ml-1" />
+                )}
+              </button>
+            ) : (
+              <button
+                className="text-lg py-1 px-2 bg-red-300 rounded flex items-center"
+                onClick={() => setApplicants(false)}
+              >
+                Close
+                <AiOutlineClose className="ml-1" />
+              </button>
+            ))}
         </div>
       </div>
       {!applicants ? (
