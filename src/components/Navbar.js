@@ -18,7 +18,7 @@ export default function Navbar() {
         Dentify
       </Link>
       {!authUser ? (
-        <div className="flex md:w-2/12 justify-between md:px-10">
+        <div className="flex md:w-2/12 items-center space-x-2 justify-end">
           <Link className="text-lg mr-5" to="/login">
             Login
           </Link>
