@@ -29,6 +29,15 @@ export default function ShowOrganization() {
             }${authUser.role.includes("admin") ? "(Admin)" : ""}`}
         </p>
       </div>
+      <p className="text-xl font-semibold">Admins</p>
+      <div className="grid gap-4 grid-cols-2">
+        {userData.length > 0 &&
+          userData
+            .filter((user) => user.role.includes("admin"))
+            .map((user, index) => (
+              <ShowUser user={user} key={`${user.userid + index}`} />
+            ))}
+      </div>
       <p className="text-xl font-semibold">Your Doctors</p>
       <div className="grid gap-4 grid-cols-2">
         {userData.length > 0 &&
