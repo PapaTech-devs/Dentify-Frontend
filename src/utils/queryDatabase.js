@@ -16,22 +16,29 @@ export async function getUser(uid) {
 }
 
 export async function getAllUsers() {
-  const response = await fetch(`${URL}/users/`);
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(`${URL}/users/`);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 export async function updateUser(uid, key, value) {
-  console.log(key, value);
-  const response = await fetch(`${URL}/users/${uid}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      role: value,
-    }),
-  });
-  const data = await response.json();
-  return data["user"];
+  try {
+    const response = await fetch(`${URL}/users/${uid}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        role: value,
+      }),
+    });
+    const data = await response.json();
+    return data["user"];
+  } catch (err) {
+    console.error(err);
+  }
 }
