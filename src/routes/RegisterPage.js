@@ -16,7 +16,7 @@ export default function RegisterPage() {
     registrationNo: "",
   };
 
-  const { createUser } = useAuth();
+  const { createUser, setAuthUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errors, setError] = useState({
@@ -161,7 +161,8 @@ export default function RegisterPage() {
       values.role = doctor ? ["doctor"] : ["moderator"];
       const userid = await createUser(values.email, values.password);
       values.userid = userid;
-      await storeUser(values);
+      const user = await storeUser(values);
+      setAuthUser(user);
       setLoading(false);
       navigate("/", { replace: true });
     } catch (e) {

@@ -30,7 +30,7 @@ export async function storeUser(props) {
     data["registration_number"] = props.registrationNo;
   }
   try {
-    await fetch(`${URL}/users`, {
+    const res = await fetch(`${URL}/users`, {
       method: "POST",
       headers: {
         Accept: "*/*",
@@ -38,6 +38,8 @@ export async function storeUser(props) {
       },
       body: JSON.stringify(data),
     });
+    const d = await res.json();
+    return d["user"];
   } catch (err) {
     console.error(err);
   }

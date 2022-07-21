@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const { authUser, signMeOut, loading } = useAuth();
-  console.log(authUser);
 
   if (loading)
     return (
@@ -19,7 +18,7 @@ export default function Navbar() {
         Dentify
       </Link>
       {!authUser ? (
-        <div className="flex md:w-2/12 justify-between md:px-10">
+        <div className="flex md:w-2/12 items-center space-x-2 justify-end">
           <Link className="text-lg mr-5" to="/login">
             Login
           </Link>
@@ -28,10 +27,12 @@ export default function Navbar() {
           </Link>
         </div>
       ) : (
-        <div className="flex md:w-2/12 justify-between items-center">
-          <Link className="text-lg mr-3" to="/dashboard">
-            Dashboard
-          </Link>
+        <div className="flex md:w-2/12 items-center space-x-2 justify-end">
+          {authUser.approved && (
+            <Link className="text-lg mr-3" to="/dashboard">
+              Dashboard
+            </Link>
+          )}
           <button onClick={() => signMeOut()} className="text-lg">
             Logout
           </button>
