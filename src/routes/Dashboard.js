@@ -5,7 +5,7 @@ import SidePanel from "../components/SidePanel";
 export default function Dashboard() {
   const [index, setIndex] = useState(1);
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       <SidePanel index={index} setIndex={setIndex} />
       <MainComponent index={index} />
     </div>

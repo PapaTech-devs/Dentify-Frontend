@@ -26,15 +26,18 @@ export default function ShowOrganization() {
       setApprovedList(userData.filter((user) => user.approved));
       setUnapprovedList(userData.filter((user) => !user.approved));
     }
+    console.log("Inside useEffect showorganization");
     //eslint-disable-next-line
-  }, []);
+  }, [userData]);
 
   return (
-    <div className="w-full h-full p-8 space-y-4">
-      <div className="flex justify-between items-center">
-        <p className="text-3xl font-bold">Tulip Medical Organization</p>
+    <div className="w-full h-full md:p-8 p-4 space-y-4">
+      <div className="flex flex-col md:flex-row justify-between items-center">
+        <p className="text-2xl md:text-3xl pb-4 md:pb-0 font-bold text-center">
+          Tulip Medical Organization
+        </p>
         <div className="flex items-center mr-3 space-x-3">
-          <p className="text-lg">
+          <p className="md:text-lg">
             Welcome{" "}
             {authUser &&
               `${authUser.role.includes("doctor") ? "Dr." : "Mr."}${
@@ -44,7 +47,7 @@ export default function ShowOrganization() {
           {authUser.role.includes("admin") &&
             (!applicants ? (
               <button
-                className="text-lg py-1 px-2 bg-green-200 rounded flex items-center"
+                className="md:text-lg py-1 px-2 bg-green-200 rounded flex items-center"
                 onClick={() => setApplicants(true)}
               >
                 Applicants
@@ -54,7 +57,7 @@ export default function ShowOrganization() {
               </button>
             ) : (
               <button
-                className="text-lg py-1 px-2 bg-red-300 rounded flex items-center"
+                className="md:text-lg py-1 px-2 bg-red-300 rounded flex items-center"
                 onClick={() => setApplicants(false)}
               >
                 Close

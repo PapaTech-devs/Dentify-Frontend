@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AiFillPhone } from "react-icons/ai";
+import { AiFillPhone, AiOutlineCloseCircle } from "react-icons/ai";
 import { FiMail } from "react-icons/fi";
 import Select from "react-select";
 import { useAuth } from "../hooks/contextHooks";
@@ -17,28 +17,28 @@ export default function ShowUser({ user }) {
   const [error, setError] = useState(null);
 
   return (
-    <div className="bg-gray-100 p-4 rounded-md flex justify-between">
-      <div className="w-3/5">
+    <div className="bg-gray-100 p-4 rounded-md flex justify-between md:flex-row flex-col space-y-2 md:space-y-0">
+      <div className="md:w-3/5">
         <p className="text-2xl mb-1">
           {isDoctor ? "Dr." : ""}
           {user.name}
         </p>
         {isDoctor && (
-          <p className="text-lg text-gray-600 font-semibold">
+          <p className="md:text-lg text-gray-600 font-semibold">
             {user.designation}
           </p>
         )}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 w-fit">
           <AiFillPhone size={20} />
           <p className="text-base">{user.mobile_number}</p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 w-fit">
           <FiMail size={20} />
           <p className="text-base">{user.email}</p>
         </div>
       </div>
-      <div className="w-2/5 space-y-1">
-        <p className="text-xl font-semibold">Roles</p>
+      <div className="md:w-2/5 space-y-1">
+        <p className="text-xl font-semibold mb-2">Roles</p>
         {error && <p className="text-red-500 font-semibold text-sm">{error}</p>}
         {authUser.role.includes("admin") ? (
           <Select
@@ -87,7 +87,7 @@ export default function ShowUser({ user }) {
           </div>
         )}
         {roleChange && (
-          <div className="flex space-x-1 items-center">
+          <div className="flex space-x-2 items-center pt-3">
             <button
               onClick={async () => {
                 if (user.userid === authUser.userid) {
@@ -108,11 +108,11 @@ export default function ShowUser({ user }) {
               }}
               className={`px-2 py-1 ${
                 user.role < newRoles ? "bg-green-500" : "bg-red-500"
-              } text-white rounded-sm`}
+              } text-white rounded-sm text-sm`}
             >
               {user.role < newRoles ? "Add role" : "Remove Role"}
             </button>
-            <div>
+            <div className="flex space-x-2 pt-1 items-center">
               {user.role < newRoles
                 ? newRoles
                     .filter((temprole) => !user.role.includes(temprole))
@@ -130,6 +130,14 @@ export default function ShowUser({ user }) {
                           role.split("").splice(1, role.length).join("")}
                       </p>
                     ))}
+              <button
+                onClick={() => {
+                  setNewRoles([]);
+                  setRoleChange(false);
+                }}
+              >
+                <AiOutlineCloseCircle size={20} />
+              </button>
             </div>
           </div>
         )}
