@@ -82,3 +82,21 @@ export async function updateUser(uid, key, value) {
     console.error(err);
   }
 }
+
+export async function updateUserAppointment(uid, key, value) {
+  try {
+    const response = await fetch(`${URL}/users/updateAppointment/${uid}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        appointments: value,
+      }),
+    });
+    const data = await response.json();
+    return data["user"];
+  } catch (err) {
+    console.error(err);
+  }
+}
