@@ -1,11 +1,11 @@
 import { useAuth } from "../hooks/contextHooks";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useUserData } from "../hooks/userHooks";
 
 export default function Navbar() {
   const { authUser, signMeOut, loading } = useAuth();
-
-  console.log(authUser);
+  const [, setUserData] = useUserData();
 
   if (loading)
     return (
@@ -35,7 +35,13 @@ export default function Navbar() {
               Dashboard
             </Link>
           )}
-          <button onClick={() => signMeOut()} className="text-lg">
+          <button
+            onClick={async () => {
+              await signMeOut();
+              setUserData([]);
+            }}
+            className="text-lg"
+          >
             Logout
           </button>
         </div>

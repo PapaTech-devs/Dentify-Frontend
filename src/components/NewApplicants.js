@@ -59,7 +59,7 @@ export default function NewApplicants({ user }) {
           <p className="text-base">{user.sex}</p>
         </div>
       </div>
-      <div className="space-x-2">
+      <div className="flex space-x-2 items-start">
         <button
           onClick={acceptHandler}
           disabled={loading}
