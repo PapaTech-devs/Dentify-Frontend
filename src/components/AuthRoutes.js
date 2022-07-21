@@ -8,5 +8,8 @@ export default function AuthRoutes({ children }) {
   if (!authUser) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
+  if (!authUser.approved) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
   return children;
 }

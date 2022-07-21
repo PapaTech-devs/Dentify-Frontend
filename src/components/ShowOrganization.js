@@ -26,13 +26,16 @@ export default function ShowOrganization() {
       setApprovedList(userData.filter((user) => user.approved));
       setUnapprovedList(userData.filter((user) => !user.approved));
     }
+    console.log("Inside useEffect showorganization");
     //eslint-disable-next-line
-  }, []);
+  }, [userData]);
 
   return (
     <div className="w-full h-full p-8 space-y-4">
-      <div className="flex justify-between items-center">
-        <p className="text-3xl font-bold">Tulip Medical Organization</p>
+      <div className="flex flex-col md:flex-row justify-between items-center">
+        <p className="text-3xl pb-4 md:pb-0 md:text-3xl font-bold">
+          Tulip Medical Organization
+        </p>
         <div className="flex items-center mr-3 space-x-3">
           <p className="text-lg">
             Welcome{" "}

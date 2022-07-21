@@ -5,7 +5,7 @@ export default function ApprovedMembers({ userList }) {
   return (
     <>
       <p className="text-xl font-semibold">Admins</p>
-      <div className="grid gap-4 grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
         {userList.length > 0 &&
           userList
             .filter((user) => user.role.includes("admin"))
@@ -14,7 +14,7 @@ export default function ApprovedMembers({ userList }) {
             ))}
       </div>
       <p className="text-xl font-semibold">Your Doctors</p>
-      <div className="grid gap-4 grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
         {userList.length > 0 &&
           userList
             .filter((user) => user.role.includes("doctor"))
@@ -23,7 +23,7 @@ export default function ApprovedMembers({ userList }) {
             ))}
       </div>
       <p className="text-xl font-semibold">Your Moderators</p>
-      <div className="grid gap-4 grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
         {userList.length > 0 &&
           userList
             .filter((user) => user.role.includes("moderator"))

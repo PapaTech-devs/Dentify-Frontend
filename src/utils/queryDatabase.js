@@ -15,6 +15,16 @@ export async function getUser(uid) {
   }
 }
 
+export async function deleteUser(uid) {
+  try {
+    await fetch(`${URL}/users/${uid}`, {
+      method: "DELETE",
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 export async function storeUser(props) {
   let data = {};
   data["userid"] = props.userid;
@@ -56,18 +66,18 @@ export async function getAllUsers() {
 }
 
 export async function updateUser(uid, key, value) {
+  const data = {};
+  data[`${key}`] = value;
   try {
     const response = await fetch(`${URL}/users/${uid}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        role: value,
-      }),
+      body: JSON.stringify(data),
     });
-    const data = await response.json();
-    return data["user"];
+    const d = await response.json();
+    return d["user"];
   } catch (err) {
     console.error(err);
   }

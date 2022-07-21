@@ -2,9 +2,9 @@ import React from "react";
 
 export default function SidePanel({ index, setIndex }) {
   return (
-    <div className="min-h-screen w-64 bg-slate-700 flex flex-col items-center space-y-4 py-6">
+    <div className="md:min-h-screen w-full md:w-64 bg-slate-700 flex flex-row md:flex-col items-center justify-center md:justify-start md:space-y-4 py-6">
       <div
-        className={`transition duration-150 ease-in-out hover:scale-105 px-4 py-2 ${
+        className={`transition duration-150 ease-in-out hover:scale-105 px-2 md:px-4 py-2 ${
           index === 1 && "bg-slate-400"
         } rounded-full cursor-pointer`}
         onClick={() => setIndex(1)}
