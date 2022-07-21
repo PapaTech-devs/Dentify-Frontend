@@ -16,6 +16,7 @@ export default function ShowOrganization() {
 
   useEffect(() => {
     async function fetchUsers() {
+      console.log("fetch users called");
       const list = await getAllUsers();
       setUserData(list);
       setApprovedList(list.filter((user) => user.approved));
