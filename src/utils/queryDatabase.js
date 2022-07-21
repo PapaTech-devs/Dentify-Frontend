@@ -100,3 +100,91 @@ export async function updateUserAppointment(uid, key, value) {
     console.error(err);
   }
 }
+
+//patient queries
+
+export async function getPatient(uid) {
+  // do API requests here
+  try {
+    const response = await fetch(`${URL}/patients/${uid}`, {
+      method: "GET",
+      headers: {
+        Accept: "*/*",
+      },
+    });
+    const data = await response.json();
+    return data["patient"];
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// export async function deletePatient(uid) {
+//   try {
+//     await fetch(`${URL}/patients/${uid}`, {
+//       method: "DELETE",
+//     });
+//   } catch (err) {
+//     console.error(err);
+//   }
+// }
+
+export async function storePatient(props) {
+  let data = {};
+  // data["patientid"] = props.patientid;
+  // data["name"] = props.fullName;
+  // data["email"] = props.email;
+  // data["mobile_number"] = props.mobileNumber;
+  // data["age"] = props.age;
+  // data["sex"] = props.sex;
+  // data["organization"] = props.organization;
+  // data["address"] = props.address;
+  // data["doctor"] = props.doctor;
+  // data["time"] = props.time;
+  // data["clinic"]= props.clinic;
+  for (let key in props) if (props[key]) data[key] = props[key];
+
+  try {
+    console.log("new patient", data);
+    const res = await fetch(`${URL}/patients`, {
+      method: "POST",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const d = await res.json();
+    return d["patient"];
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function getAllPatients() {
+  try {
+    const response = await fetch(`${URL}/patients/`);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function updatePatient(uid, key, value) {
+  const data = {};
+  data[`${key}`] = value;
+  try {
+    const response = await fetch(`${URL}/patients/${uid}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const d = await response.json();
+    return d["patient"];
+  } catch (err) {
+    console.error(err);
+  }
+}

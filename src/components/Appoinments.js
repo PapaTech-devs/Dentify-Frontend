@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AppointmentForm from "./AppointmentForm.js";
 
 export default function ShowAppoinments({
   selectedDate,
@@ -6,6 +7,7 @@ export default function ShowAppoinments({
   selectedUser,
 }) {
   const [formState, setFormState] = useState(false);
+  const [patientData, setPatientData] = useState({});
   if (!selectedUser.value) console.log("Appoinment of ", selectedUser.name);
   else console.log("Appoinment of ", selectedUser.value);
   console.log(userAppointments);
@@ -35,7 +37,7 @@ export default function ShowAppoinments({
           Add new appointment
         </button>
       </div>
-      {formState && <div>Form</div>}
+      {formState && <AppointmentForm setPatientData={setPatientData} />}
     </div>
   );
 }
