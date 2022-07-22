@@ -64,7 +64,7 @@ export default function ShowCalendar() {
         <ShowAppoinments
           selectedDate={cdate}
           userAppointments={selectedUserAppointments}
-          selectedUser={cuser}
+          selectedUser={selectedUserData}
         />
       </div>
     </div>

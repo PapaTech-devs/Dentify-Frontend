@@ -83,7 +83,7 @@ export async function updateUser(uid, key, value) {
   }
 }
 
-export async function updateUserAppointment(uid, key, value) {
+export async function updateUserAppointment(uid, value) {
   try {
     const response = await fetch(`${URL}/users/updateAppointment/${uid}`, {
       method: "PATCH",
