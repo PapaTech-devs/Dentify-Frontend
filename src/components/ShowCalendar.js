@@ -45,20 +45,25 @@ export default function ShowCalendar() {
   console.log("userOptions", Options);
   console.log("current user", authUser.name);
   return (
-    <div>
-      <Select
-        defaultValue={Options[0]}
-        // isDisabled={isDisabled}
-        // isLoading={isLoading}
-        isClearable={false}
-        // isRtl={isRtl}
-        isSearchable={true}
-        // name="color"
-        options={Options}
-        onChange={(e) => setUser(e)}
-      />
-      <div>
-        <Calendar onChange={onChange} value={cdate} />
+    <div className="grid-cols-1 gap-5 inline-grid px-14 md:grid-cols-2 p-4">
+      <div className="flex items-center flex-col space-y-3">
+        <Select
+          className="w-full"
+          defaultValue={Options[0]}
+          // isDisabled={isDisabled}
+          // isLoading={isLoading}
+          isClearable={false}
+          // isRtl={isRtl}
+          isSearchable={true}
+          // name="color"
+          options={Options}
+          onChange={(e) => setUser(e)}
+        />
+        <Calendar
+          onChange={onChange}
+          value={cdate}
+          className="react-calendar"
+        />
       </div>
       <div>
         <ShowAppoinments

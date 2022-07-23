@@ -5,6 +5,7 @@ export default function AppointmentForm({
   onSubmit,
   appoinment,
   setAppointment,
+  setFormState,
 }) {
   const setInputValues = (e) => {
     const { name, value } = e.target;
@@ -17,20 +18,24 @@ export default function AppointmentForm({
   console.log(appoinment);
 
   return (
-    <div>
-      <form className="mb-3 xl:w-96" onSubmit={onSubmit}>
-        <div className="px-3 p-2 p">
-          <input
-            type="text"
-            placeholder="patient-id"
-            name="patientid"
-            onChange={setInputValues}
-            className="
+    <div className="flex items-center justify-center">
+      <form
+        className="mb-3 xl:w-96 flex lg:flex-row flex-col justify-center items-center p-3 pt-4"
+        onSubmit={onSubmit}
+      >
+        <input
+          type="text"
+          placeholder="patient-id"
+          name="patientid"
+          onChange={setInputValues}
+          className="
         form-control
         block
-        w-full
+        w-72
         px-3
         py-1.5
+        mb-1.5
+        lg:mb-0
         text-base
         font-normal
         text-gray-700
@@ -42,14 +47,20 @@ export default function AppointmentForm({
         m-0
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
       "
-          ></input>
-        </div>
-        <div className="px-20">
+        ></input>
+        <div class="inline-flex px-1" role="group">
           <input
             type="submit"
             value="Create appointment"
-            className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+            className="inline-flex bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1.5 px-4 border border-blue-500 hover:border-transparent rounded"
           ></input>
+          <button
+            type="button"
+            className="inline-flex bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1.5 px-4 border border-red-500 hover:border-transparent rounded"
+            onClick={() => setFormState(false)}
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </div>

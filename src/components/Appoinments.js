@@ -72,55 +72,65 @@ export default function ShowAppoinments({
   return (
     <div>
       {/* appointment list */}
-      <div>
-        <h4 class="font-medium leading-tight text-lg mt-0 mb-2 text-gray-800 px-1">
-          Appoinments of {selectedDate.toDateString()}
-        </h4>
-        {userAppointments.map((appointment, index) => {
-          if (selectedDate.toDateString() === appointment.Date)
-            return (
-              <div className="list-disc px-3">
-                <li key={index}>{appointment.patientid}</li>
-              </div>
-            );
-          else return <div key={index}></div>;
-        })}
-      </div>
 
       {/* add appointment */}
 
-      <div class="px-5 pt-3 pb-3">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => {
-            console.log("clicked");
-            setFormState(true);
-            setNewFormState(false);
-          }}
-        >
-          Add appointment for existing patient
-        </button>
+      <div class="flex items-center justify-center ">
+        <div class="inline-flex" role="group">
+          <button
+            onClick={() => {
+              console.log("clicked");
+              setFormState(true);
+              setNewFormState(false);
+            }}
+            type="button"
+            class="rounded-l inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase hover:bg-blue-700 focus:bg-lime-500 focus:outline-none focus:ring-0 active:bg-green-600 transition duration-150 ease-in-out"
+          >
+            Appointment for existing patient
+          </button>
+
+          <button
+            onClick={() => {
+              console.log("clicked");
+              setNewFormState(true);
+              setFormState(false);
+            }}
+            type="button"
+            class="rounded-r inline-block px-6 py-2.5 bg-blue-700 text-white font-medium text-xs leading-tight uppercase hover:bg-blue-700 focus:bg-lime-500 focus:outline-none focus:ring-0 active:bg-green-600 transition duration-150 ease-in-out"
+          >
+            New patient appointment
+          </button>
+        </div>
       </div>
+
       {formState && (
         <AppointmentForm
           onSubmit={onSubmit}
           appoinment={appoinment}
           setAppointment={setAppointment}
+          setFormState={setFormState}
         />
       )}
-      <div class="px-7">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => {
-            console.log("clicked");
-            setNewFormState(true);
-            setFormState(false);
-          }}
-        >
-          Add appointment for a new patient
-        </button>
-      </div>
+
       {newformState && <p>A form will open for creating new appoinment</p>}
+
+      <div>
+        <h4 class="text-center font-medium leading-tight text-lg mt-0 mb-2 text-gray-800 pt-3">
+          Appoinments of {selectedDate.toDateString()}
+        </h4>
+        {userAppointments.map((appointment, index) => {
+          if (selectedDate.toDateString() === appointment.Date)
+            return (
+              <div
+                className="block p-3 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 text-center w-full font-semibold"
+                key={index}
+              >
+                {appointment.patientid}
+              </div>
+            );
+          else return <div key={index}></div>;
+        })}
+      </div>
     </div>
   );
 }
