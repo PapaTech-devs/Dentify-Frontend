@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AppointmentForm from "./AppointmentForm.js";
-// import newAppointmentForm from "./newPatientAppointment.js";
+import NewAppointment from "./NewAppointment.js";
 import { updateUserAppointment, getPatient } from "../utils/queryDatabase.js";
 import { useUserData } from "../hooks/userHooks.js";
 import { useAuth } from "../hooks/contextHooks.js";
@@ -11,7 +11,7 @@ export default function ShowAppoinments({
   selectedUser,
 }) {
   const [formState, setFormState] = useState(false);
-  const [newformState, setNewFormState] = useState(false);
+  const [newFormState, setNewFormState] = useState(false);
   const [appoinment, setAppointment] = useState({});
   const [userData, setUserData] = useUserData();
   const { authUser, setAuthUser } = useAuth();
@@ -102,7 +102,7 @@ export default function ShowAppoinments({
           </button>
         </div>
       </div>
-
+      {/* appointmrnt for existing patient */}
       {formState && (
         <AppointmentForm
           onSubmit={onSubmit}
@@ -112,7 +112,14 @@ export default function ShowAppoinments({
         />
       )}
 
-      {newformState && <p>A form will open for creating new appoinment</p>}
+      {/* appointment for new patient (add new patient) */}
+
+      {newFormState && (
+        <NewAppointment
+          newFormState={newFormState}
+          setNewFormState={setNewFormState}
+        />
+      )}
 
       <div>
         <h4 class="text-center font-medium leading-tight text-lg mt-0 mb-2 text-gray-800 pt-3">
