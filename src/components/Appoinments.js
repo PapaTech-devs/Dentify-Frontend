@@ -116,7 +116,7 @@ export default function ShowAppoinments({
 
       <div>
         <h4 class="text-center font-medium leading-tight text-lg mt-0 mb-2 text-gray-800 pt-3">
-          Appoinments of {selectedDate.toDateString()}
+          Appointments of {selectedDate.toDateString()}
         </h4>
         {userAppointments.map((appointment, index) => {
           if (selectedDate.toDateString() === appointment.Date)
