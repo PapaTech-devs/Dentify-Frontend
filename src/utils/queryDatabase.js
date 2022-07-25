@@ -131,21 +131,9 @@ export async function getPatient(uid) {
 
 export async function storePatient(props) {
   let data = {};
-  // data["patientid"] = props.patientid;
-  // data["name"] = props.fullName;
-  // data["email"] = props.email;
-  // data["mobile_number"] = props.mobileNumber;
-  // data["age"] = props.age;
-  // data["sex"] = props.sex;
-  // data["organization"] = props.organization;
-  // data["address"] = props.address;
-  // data["doctor"] = props.doctor;
-  // data["time"] = props.time;
-  // data["clinic"]= props.clinic;
   for (let key in props) if (props[key]) data[key] = props[key];
 
   try {
-    console.log("new patient", data);
     const res = await fetch(`${URL}/patients`, {
       method: "POST",
       headers: {

@@ -6,16 +6,6 @@ import { useAuth } from "../hooks/contextHooks";
 import { storeUser } from "../utils/queryDatabase";
 
 export default function RegisterPage() {
-  const initialValues = {
-    fullName: "",
-    email: "",
-    age: "",
-    password: "",
-    confirmPassword: "",
-    designation: "",
-    registrationNo: "",
-  };
-
   const { createUser, setAuthUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -31,7 +21,15 @@ export default function RegisterPage() {
     registrationNo: null,
     designation: null,
   });
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState({
+    fullName: "",
+    email: "",
+    age: "",
+    password: "",
+    confirmPassword: "",
+    designation: "",
+    registrationNo: "",
+  });
   const [mobileNumber, setMobileNumber] = useState("");
   const [sex, setSex] = useState("");
   const [organization, setOrganization] = useState("");

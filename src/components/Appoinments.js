@@ -4,6 +4,8 @@ import NewAppointment from "./NewAppointment.js";
 import { updateUserAppointment, getPatient } from "../utils/queryDatabase.js";
 import { useUserData } from "../hooks/userHooks.js";
 import { useAuth } from "../hooks/contextHooks.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ShowAppoinments({
   selectedDate,
@@ -23,14 +25,16 @@ export default function ShowAppoinments({
   //   return singleAppointment.Date && selectedDate.toDateString();
   // }
 
-  async function onSubmit(e) {
-    e.preventDefault();
-    console.log("Submit");
+  async function onSubmit(e, patientid) {
+    if (e) e.preventDefault();
     try {
+      if (patientid) {
+        appoinment.patientid = patientid;
+      }
       const cpatient = await getPatient(appoinment.patientid);
       appoinment["Date"] = selectedDate.toDateString();
-      console.log("current patient", cpatient, appoinment);
-      console.log("For Dr", selectedUser.name, selectedUser.userid);
+      // console.log("current patient", cpatient, appoinment);
+      // console.log("For Dr", selectedUser.name, selectedUser.userid);
       if (
         cpatient &&
         !userAppointments.find((singleAppointment) => {
@@ -41,7 +45,7 @@ export default function ShowAppoinments({
           );
         })
       ) {
-        console.log("The patient didnt had any appointment today");
+        // console.log("The patient didnt had any appointment today");
         const userWithNewAppointment = await updateUserAppointment(
           selectedUser.userid,
           appoinment
@@ -59,9 +63,42 @@ export default function ShowAppoinments({
           return tempuser;
         });
         setUserData(newList);
+        toast.success(
+          `New appointment created with id ${appoinment.patientid} under Dr. ${selectedUser.name}`,
+          {
+            position: "top-right",
+            autoClose: 3500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+          }
+        );
       } else {
-        if (cpatient) console.log("Appointment already exists");
-        else console.log("Patient does not exist");
+        if (cpatient)
+          toast.error(
+            "Appointment already exists for this patient on this date",
+            {
+              position: "top-right",
+              autoClose: 3500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+            }
+          );
+        else
+          toast.error("Patient does not exists with this id", {
+            position: "top-right",
+            autoClose: 3500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+          });
       }
     } catch (err) {
       console.log(err);
@@ -102,6 +139,17 @@ export default function ShowAppoinments({
           </button>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+      />
       {/* appointmrnt for existing patient */}
       {formState && (
         <AppointmentForm
@@ -116,6 +164,7 @@ export default function ShowAppoinments({
 
       {newFormState && (
         <NewAppointment
+          onPatientSaved={onSubmit}
           newFormState={newFormState}
           setNewFormState={setNewFormState}
         />
