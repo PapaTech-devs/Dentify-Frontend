@@ -32,7 +32,7 @@ export default function AllPatients() {
   return (
     <div className="w-full px-4 py-4">
       <p className="text-xl font-medium md:text-2xl pb-4">
-        All patients in your organization
+        ALL PATIENTS IN YOUR ORGANIZATION
       </p>
       <Select
         options={patients.map((patient) => ({
