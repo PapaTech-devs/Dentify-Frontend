@@ -21,10 +21,6 @@ export default function ShowAppoinments({
   else console.log("Appoinment of ", selectedUser.value);
   console.log("Selected users appointments:", userAppointments);
 
-  // function checkAppointment(singleAppointment) {
-  //   return singleAppointment.Date && selectedDate.toDateString();
-  // }
-
   async function onSubmit(e, patientid) {
     if (e) e.preventDefault();
     try {
@@ -112,8 +108,8 @@ export default function ShowAppoinments({
 
       {/* add appointment */}
 
-      <div class="flex items-center justify-center ">
-        <div class="inline-flex" role="group">
+      <div className="flex items-center justify-center ">
+        <div className="inline-flex" role="group">
           <button
             onClick={() => {
               console.log("clicked");
@@ -121,7 +117,7 @@ export default function ShowAppoinments({
               setNewFormState(false);
             }}
             type="button"
-            class="rounded-l inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase hover:bg-blue-700 focus:bg-lime-500 focus:outline-none focus:ring-0 active:bg-green-600 transition duration-150 ease-in-out"
+            className="rounded-l inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase hover:bg-blue-700 focus:bg-lime-500 focus:outline-none focus:ring-0 active:bg-green-600 transition duration-150 ease-in-out"
           >
             Appointment for existing patient
           </button>
@@ -133,7 +129,7 @@ export default function ShowAppoinments({
               setFormState(false);
             }}
             type="button"
-            class="rounded-r inline-block px-6 py-2.5 bg-blue-700 text-white font-medium text-xs leading-tight uppercase hover:bg-blue-700 focus:bg-lime-500 focus:outline-none focus:ring-0 active:bg-green-600 transition duration-150 ease-in-out"
+            className="rounded-r inline-block px-6 py-2.5 bg-blue-700 text-white font-medium text-xs leading-tight uppercase hover:bg-blue-700 focus:bg-lime-500 focus:outline-none focus:ring-0 active:bg-green-600 transition duration-150 ease-in-out"
           >
             New patient appointment
           </button>
@@ -171,7 +167,7 @@ export default function ShowAppoinments({
       )}
 
       <div>
-        <h4 class="text-center font-medium leading-tight text-lg mt-0 mb-2 text-gray-800 pt-3">
+        <h4 className="text-center font-medium leading-tight text-lg mt-0 mb-2 text-gray-800 pt-3">
           Appointments of {selectedDate.toDateString()}
         </h4>
         {userAppointments.map((appointment, index) => {

@@ -6,7 +6,7 @@ export default function SidePanel({ index, setIndex }) {
       <div
         className={`transition duration-150 ease-in-out md:hover:scale-105 px-2 md:px-4 py-2 ${
           index === 1 && "bg-slate-400"
-        } rounded-full cursor-pointer`}
+        } md:rounded-full rounded-lg cursor-pointer text-center`}
         onClick={() => setIndex(1)}
       >
         <p className="text-sm md:text-lg font-semibold text-white">
@@ -16,7 +16,7 @@ export default function SidePanel({ index, setIndex }) {
       <div
         className={`transition duration-150 ease-in-out md:hover:scale-105 px-4 py-2 ${
           index === 2 && "bg-slate-400"
-        } rounded-full cursor-pointer`}
+        } md:rounded-full rounded-lg cursor-pointer text-center`}
         onClick={() => setIndex(2)}
       >
         <p className="text-sm md:text-lg font-semibold text-white">
@@ -26,11 +26,21 @@ export default function SidePanel({ index, setIndex }) {
       <div
         className={`transition duration-150 ease-in-out md:hover:scale-105 px-4 py-2 ${
           index === 3 && "bg-slate-400"
-        } rounded-full cursor-pointer`}
+        } md:rounded-full rounded-lg cursor-pointer text-center`}
         onClick={() => setIndex(3)}
       >
         <p className="text-sm md:text-lg font-semibold text-white">
-          Your patients
+          Your appointments
+        </p>
+      </div>
+      <div
+        className={`transition duration-150 ease-in-out md:hover:scale-105 px-4 py-2 ${
+          index === 4 && "bg-slate-400"
+        } md:rounded-full rounded-lg cursor-pointer text-center`}
+        onClick={() => setIndex(4)}
+      >
+        <p className="text-sm md:text-lg font-semibold text-white">
+          All patients
         </p>
       </div>
     </div>

@@ -103,6 +103,22 @@ export async function updateUserAppointment(uid, value) {
 
 //patient queries
 
+export async function getAllUserAppointments(uid) {
+  // do API requests here
+  try {
+    const response = await fetch(`${URL}/users/getAppointments/${uid}`, {
+      method: "GET",
+      headers: {
+        Accept: "*/*",
+      },
+    });
+    const data = await response.json();
+    return data["appointmentList"];
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export async function getPatient(uid) {
   // do API requests here
   try {
