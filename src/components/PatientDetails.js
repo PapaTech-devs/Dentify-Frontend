@@ -8,7 +8,7 @@ export default function PatientDetails({ patient, screenHandler }) {
   return (
     <div className="p-4 w-full">
       <div className="flex justify-between pb-4">
-        <p className="text-center text-xl">PATIENT MEDICAL REPORT</p>
+        <p className="text-center text-xl">PATIENT'S MEDICAL REPORT</p>
         <button onClick={() => screenHandler(null)}>
           <AiFillCloseCircle size={34} />
         </button>
