@@ -40,7 +40,7 @@ export default function PatientDetails({ patient, screenHandler }) {
         <div className="flex text-lg space-x-2">
           <p className="font-semibold">Patient Email: </p>
           <a
-            className="hover:underline hover:text-blue-500"
+            className="text-blue-500 md:text-black md:hover:text-blue-500"
             href={`mailto:${patient.email}`}
           >
             {patient.email}
@@ -49,7 +49,7 @@ export default function PatientDetails({ patient, screenHandler }) {
         <div className="flex text-lg space-x-2">
           <p className="font-semibold">Mobile Number: </p>
           <a
-            className="hover:underline hover:text-blue-500"
+            className="text-blue-500 md:text-black md:hover:text-blue-500"
             href={`tel:${patient.mobile_number}`}
           >
             {patient.mobile_number}
