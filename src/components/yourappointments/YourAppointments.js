@@ -4,7 +4,7 @@ import { useUserData } from "../../hooks/userHooks";
 import { getAllUserAppointments, getAllUsers } from "../../utils/queryDatabase";
 import InfiniteLoading from "../../utils/InfiniteLoading";
 import PatientList from "./PatientList";
-import PatientDetails from "../PatientDetails";
+import PatientDetails from "../patientdetails/PatientDetails";
 
 export default function YourAppointments() {
   const [userData, setUserData] = useUserData();

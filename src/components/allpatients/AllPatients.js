@@ -3,7 +3,7 @@ import InfiniteLoading from "../../utils/InfiniteLoading";
 import { getAllPatients } from "../../utils/queryDatabase";
 import PatientList from "../yourappointments/PatientList";
 import Select from "react-select";
-import PatientDetails from "../PatientDetails";
+import PatientDetails from "../patientdetails/PatientDetails";
 
 export default function AllPatients() {
   const [patients, setPatients] = useState(null);
