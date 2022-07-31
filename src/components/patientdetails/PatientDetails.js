@@ -356,7 +356,10 @@ export default function PatientDetails({
         >
           Save
         </button>
-        <button className="px-6 py-2 bg-yellow-600 text-white text-xl rounded">
+        <button
+          className="px-6 py-2 bg-yellow-600 text-white text-xl rounded"
+          onClick={() => window.print()}
+        >
           Download Report
         </button>
       </div>
