@@ -5,26 +5,47 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InfiniteLoading from "../../utils/InfiniteLoading";
 import ToothBox from "./ToothBox";
+import { updatePatient } from "../../utils/queryDatabase";
+import Select from "react-select";
 
-export default function PatientDetails({ patient, screenHandler }) {
+export default function PatientDetails({
+  patient,
+  screenHandler,
+  setPatients,
+  patientList,
+}) {
   const [toothList, setToothList] = useState(null);
-  const quadrants = ["UR", "UL", "LR", "LL"];
+  const quadrants = ["Upper Right", "Upper Left", "Lower Right", "Lower Left"];
+  const qMap = {
+    UR: "Upper Right",
+    UL: "Upper Left",
+    LR: "Lower Right",
+    LL: "Lower Left",
+  };
   const [modal, setModal] = useState(false);
+  const [quadrant, setQuadrant] = useState("Upper Right");
   const [selectedTooth, setSelectedTooth] = useState(null);
+  const [stain, setStain] = useState(patient.report.stain);
+  const [calculus, setCalculus] = useState(patient.report.calculus);
+  const [bop, setBop] = useState(patient.report.BOP);
+  const [save, setSave] = useState(false);
+  const [description, setDescription] = useState(
+    patient.report.additionalDescription
+  );
 
   useEffect(() => {
     let list = [];
-    for (let quadrant of quadrants) {
+    for (let q of ["UR", "UL", "LR", "LL"]) {
       for (let i = 1; i <= 8; i++) {
-        list[quadrant + i.toString()] = {
+        list[q + i.toString()] = {
           defect: false,
           side: [],
           quality: {
-            TOP: null,
-            dentalCarrier: null,
-            pulpTest: null,
-            mobility: null,
-            elisClass: null,
+            TOP: "",
+            dentalCarrier: "",
+            pulpTest: "",
+            mobility: "",
+            elisClass: "",
           },
         };
       }
@@ -48,8 +69,61 @@ export default function PatientDetails({ patient, screenHandler }) {
     // eslint-disable-next-line
   }, []);
 
-  if (!toothList) return <InfiniteLoading />;
+  async function saveReport() {
+    let temp = [];
+    for (const [key, value] of Object.entries(toothList)) {
+      if (toothList[key].defect)
+        temp.push({ toothName: key, quality: value.quality, side: value.side });
+    }
+    const obj = {
+      stain: stain,
+      calculus: calculus,
+      BOP: bop,
+      additionalDescription: description,
+      tooth: temp,
+    };
+    setSave(false);
+    const newPatient = await updatePatient(patient.patientid, "report", obj);
+    temp = patientList.map((p) => {
+      if (p.patientid === patient.patientid) p = newPatient;
+      return p;
+    });
+    setPatients(temp);
+    toast.success(`Patient report updated`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
 
+  function getLabel(text) {
+    return text.split(" ")[0].split("")[0] + text.split(" ")[1].split("")[0];
+  }
+
+  function getDefective() {
+    let temp = [];
+    for (const [key, value] of Object.entries(toothList)) {
+      if (value.defect) {
+        temp.push({
+          ...value,
+          quadrant:
+            qMap[
+              key
+                .split("")
+                .splice(0, key.length - 1)
+                .join("")
+            ],
+          index: key[2],
+        });
+      }
+    }
+    return temp;
+  }
+
+  if (!toothList) return <InfiniteLoading />;
   return (
     <div className="p-4 w-full">
       <div className="flex justify-between pb-4">
@@ -110,16 +184,98 @@ export default function PatientDetails({ patient, screenHandler }) {
           <img src="/tooth.jpeg" alt="tooth reference" />
         </div>
 
-        <p className="italic">Click checkboxes to add defects for each tooth</p>
+        <p className="italic pb-2">
+          Click checkboxes to add defects for each tooth
+        </p>
+        <p className="text-3xl font-semibold pb-4">DETAILS</p>
+        <div className="flex space-x-3 items-center justify-between w-full md:w-80">
+          <p className="text-lg font-medium">Mouth Stain: {stain}</p>
+          <input
+            type="range"
+            min="0"
+            max="3"
+            value={stain.length === 0 ? "0" : stain}
+            onChange={(text) => {
+              setSave(true);
+              let temp =
+                text.target.value.toString() === "0"
+                  ? ""
+                  : text.target.value.toString();
+              setStain(temp);
+            }}
+          />
+        </div>
+
+        <div className="flex space-x-3 items-center justify-between w-full md:w-80">
+          <p className="text-lg font-medium">Mouth Calculus: {calculus}</p>
+          <input
+            type="range"
+            min="0"
+            max="3"
+            value={calculus.length === 0 ? "0" : calculus}
+            onChange={(text) => {
+              setSave(true);
+              let temp =
+                text.target.value.toString() === "0"
+                  ? ""
+                  : text.target.value.toString();
+              setCalculus(temp);
+            }}
+          />
+        </div>
+
+        <div className="flex space-x-3 items-center justify-between w-full md:w-80">
+          <p className="text-lg font-medium">Mouth BOP: {bop}</p>
+          <input
+            type="range"
+            min="0"
+            max="3"
+            value={bop.length === 0 ? "0" : bop}
+            onChange={(text) => {
+              setSave(true);
+              let temp =
+                text.target.value.toString() === "0"
+                  ? ""
+                  : text.target.value.toString();
+              setBop(temp);
+            }}
+          />
+        </div>
+        <div className="flex flex-col md:flex-row md:space-x-4 justify-start items-start md:items-center w-full">
+          <p className="text-lg font-medium pb-2 md:pb-0">
+            Additional Description
+          </p>
+          <input
+            className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+            type="text"
+            value={description}
+            onChange={(text) => {
+              setSave(true);
+              setDescription(text.target.value);
+            }}
+          />
+        </div>
+        <p className="text-lg font-semibold pt-4 pb-2">
+          Select a quadrant from the dropdown
+        </p>
+        <Select
+          defaultValue={{ label: quadrant, value: getLabel(quadrant) }}
+          options={quadrants.map((q) => ({ label: q, value: getLabel(q) }))}
+          onChange={(e) => {
+            setQuadrant(e.label);
+          }}
+        />
+
         <div className="py-4">
-          <p className="text-2xl font-semibold">Right Upper Quadrant</p>
+          <p className="text-2xl font-semibold">{quadrant} Quadrant</p>
           <div className="font-light italic flex text-sm space-x-1 pt-2">
             <AiFillWarning size={19} color="red" />
             <p>icon indicates that the tooth has a defect</p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => {
-              const toothName = "UR" + id.toString();
+              const toothName = getLabel(quadrant) + id.toString();
+              // console.log(toothName, toothList[toothName]);
               return (
                 <div
                   key={toothName}
@@ -148,10 +304,36 @@ export default function PatientDetails({ patient, screenHandler }) {
         {modal && selectedTooth && (
           <ToothBox
             setToothList={setToothList}
-            toothName={selectedTooth}
+            toothList={toothList}
             setModal={setModal}
             tooth={toothList[selectedTooth]}
+            toothName={selectedTooth}
+            setSave={setSave}
           />
+        )}
+        <p className="font-bold text-3xl">Final remarks</p>
+        {getDefective() === 0 && <p>No defective tooth present.</p>}
+        {getDefective() !== 0 && (
+          <div className="py-2">
+            <p className="font-medium pb-1">Defects have been found in:</p>
+            {getDefective().map((tooth, index) => {
+              return (
+                <div key={index}>
+                  Tooth {tooth.index} of {tooth.quadrant} Quadrant in{" "}
+                  {tooth.side.map((side, index) => (
+                    <p
+                      key={tooth.quadrant + side + index}
+                      className="italic inline"
+                    >
+                      {side[0].toUpperCase() +
+                        side.split("").splice(1, side.length).join("")}{" "}
+                    </p>
+                  ))}
+                  face(s).
+                </div>
+              );
+            })}
+          </div>
         )}
 
         <ToastContainer
@@ -165,6 +347,18 @@ export default function PatientDetails({ patient, screenHandler }) {
           draggable
           pauseOnHover
         />
+      </div>
+      <div className="flex items-center space-x-4">
+        <button
+          disabled={!save}
+          className="px-6 py-2 bg-emerald-700 text-white text-xl rounded disabled:bg-emerald-300"
+          onClick={saveReport}
+        >
+          Save
+        </button>
+        <button className="px-6 py-2 bg-yellow-600 text-white text-xl rounded">
+          Download Report
+        </button>
       </div>
     </div>
   );

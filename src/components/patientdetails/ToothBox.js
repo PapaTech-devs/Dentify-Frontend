@@ -6,7 +6,14 @@ import React, { useEffect, useState } from "react";
 // mobility -> 1,2,3
 // eliss class -> 1,2,3,4,5,6
 
-export default function ToothBox({ setToothList, toothName, setModal, tooth }) {
+export default function ToothBox({
+  setToothList,
+  toothList,
+  setModal,
+  tooth,
+  toothName,
+  setSave,
+}) {
   const sideList = ["occlusal", "buccal", "lingual", "medial", "distal"];
   const [curr, setCurr] = useState(null);
   const [store, setStore] = useState(null);
@@ -81,7 +88,7 @@ export default function ToothBox({ setToothList, toothName, setModal, tooth }) {
                     );
                   })}
                 </div>
-                <div className="flex space-x-3 items-center">
+                <div className="flex space-x-3 items-center justify-between">
                   <p className="text-lg font-medium">TOP:</p>
                   <input
                     type="checkbox"
@@ -99,7 +106,7 @@ export default function ToothBox({ setToothList, toothName, setModal, tooth }) {
                     }}
                   />
                 </div>
-                <div className="flex space-x-3 items-center">
+                <div className="flex space-x-3 items-center justify-between">
                   <p className="text-lg font-medium">Dental Carrier:</p>
                   <input
                     type="checkbox"
@@ -117,7 +124,7 @@ export default function ToothBox({ setToothList, toothName, setModal, tooth }) {
                     }}
                   />
                 </div>
-                <div className="flex space-x-3 items-center">
+                <div className="flex space-x-3 items-center justify-between">
                   <p className="text-lg font-medium">Pulp Test:</p>
                   <input
                     type="checkbox"
@@ -135,7 +142,7 @@ export default function ToothBox({ setToothList, toothName, setModal, tooth }) {
                     }}
                   />
                 </div>
-                <div className="flex space-x-3 items-center">
+                <div className="flex space-x-3 items-center justify-between">
                   <p className="text-lg font-medium">
                     Mobility: {curr.quality.mobility}
                   </p>
@@ -158,7 +165,7 @@ export default function ToothBox({ setToothList, toothName, setModal, tooth }) {
                     }}
                   />
                 </div>
-                <div className="flex space-x-3 items-center">
+                <div className="flex space-x-3 items-center justify-between">
                   <p className="text-lg font-medium">
                     Elis Class: {curr.quality.elisClass}
                   </p>
@@ -184,7 +191,7 @@ export default function ToothBox({ setToothList, toothName, setModal, tooth }) {
               </div>
             </div>
             {/*footer*/}
-            <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+            <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200">
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
@@ -193,9 +200,34 @@ export default function ToothBox({ setToothList, toothName, setModal, tooth }) {
                 Close
               </button>
               <button
+                className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 mx-2 py-3 rounded"
+                type="button"
+                onClick={() => {
+                  curr.defect = false;
+                  curr.side = [];
+                  curr.quality.TOP = "";
+                  curr.quality.dentalCarrier = "";
+                  curr.quality.pulpTest = "";
+                  curr.quality.mobility = "";
+                  curr.quality.elisClass = "";
+                  toothList[toothName] = curr;
+                  setToothList(toothList);
+                  setModal(false);
+                  setSave(true);
+                }}
+              >
+                Reset
+              </button>
+              <button
                 className={`bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 disabled:bg-emerald-300`}
                 disabled={!change}
-                onClick={() => console.log("current object", curr)}
+                onClick={() => {
+                  curr.defect = true;
+                  toothList[toothName] = curr;
+                  setToothList(toothList);
+                  setModal(false);
+                  setSave(true);
+                }}
               >
                 Save Changes
               </button>

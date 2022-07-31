@@ -46,7 +46,12 @@ export default function YourAppointments() {
   if (!selectedOption && !doctors) return <>Loading ...</>;
   else if (showDetails)
     return (
-      <PatientDetails patient={showDetails} screenHandler={setShowDetails} />
+      <PatientDetails
+        setPatients={setPatients}
+        patient={showDetails}
+        screenHandler={setShowDetails}
+        patientList={patients}
+      />
     );
   return (
     <div className="w-full h-full md:p-8 p-4">

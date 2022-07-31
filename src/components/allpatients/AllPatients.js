@@ -27,7 +27,12 @@ export default function AllPatients() {
   if (!patients) return <InfiniteLoading length={7} />;
   else if (showDetails)
     return (
-      <PatientDetails patient={showDetails} screenHandler={setShowDetails} />
+      <PatientDetails
+        setPatients={setPatients}
+        patient={showDetails}
+        screenHandler={setShowDetails}
+        patientList={patients}
+      />
     );
   return (
     <div className="w-full px-4 py-4">
