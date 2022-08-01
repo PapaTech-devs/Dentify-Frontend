@@ -42,3 +42,21 @@
     width:100%;     
 }
 
+.printing {
+    visibility:hidden;
+}
+
+.printing .printView .removeFromPrint{
+    visibility: hidden;
+    position: absolute;
+}
+
+.printView {
+    visibility:visible;
+}
+
+.printing .printView {
+    /* You can have any CSS here to make the view better on print */
+    position:absolute;
+    top:0;
+}

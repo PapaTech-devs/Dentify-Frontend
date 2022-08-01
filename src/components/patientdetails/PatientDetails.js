@@ -125,12 +125,12 @@ export default function PatientDetails({
 
   if (!toothList) return <InfiniteLoading />;
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 w-full printView">
       <div className="flex justify-between pb-4">
-        <p className="text-center font-black text-xl md:text-3xl">
+        <p className="text-center font-black text-3xl md:text-3xl">
           PATIENT'S MEDICAL REPORT
         </p>
-        <button onClick={() => screenHandler(null)}>
+        <button className="removeFromPrint" onClick={() => screenHandler(null)}>
           <AiFillCloseCircle size={28} />
         </button>
       </div>
@@ -184,10 +184,10 @@ export default function PatientDetails({
           <img src="/tooth.jpeg" alt="tooth reference" />
         </div>
 
-        <p className="italic pb-2">
+        <p className="italic pb-2 removeFromPrint">
           Click checkboxes to add defects for each tooth
         </p>
-        <p className="text-3xl font-semibold pb-4">DETAILS</p>
+        <p className="text-xl font-bold pb-2">DETAILS</p>
         <div className="flex space-x-3 items-center justify-between w-full md:w-80">
           <p className="text-lg font-medium">Mouth Stain: {stain}</p>
           <input
@@ -255,7 +255,7 @@ export default function PatientDetails({
             }}
           />
         </div>
-        <p className="text-lg font-semibold pt-4 pb-2">
+        <p className="text-lg font-semibold pt-4 pb-2 removeFromPrint">
           Select a quadrant from the dropdown
         </p>
         <Select
@@ -264,10 +264,11 @@ export default function PatientDetails({
           onChange={(e) => {
             setQuadrant(e.label);
           }}
+          className="removeFromPrint"
         />
 
-        <div className="py-4">
-          <p className="text-2xl font-semibold">{quadrant} Quadrant</p>
+        <div className="py-4 removeFromPrint">
+          <p className="text-xl font-semibold">{quadrant} Quadrant</p>
           <div className="font-light italic flex text-sm space-x-1 pt-2">
             <AiFillWarning size={19} color="red" />
             <p>icon indicates that the tooth has a defect</p>
@@ -311,10 +312,10 @@ export default function PatientDetails({
             setSave={setSave}
           />
         )}
-        <p className="font-bold text-3xl">Final remarks</p>
-        {getDefective() === 0 && <p>No defective tooth present.</p>}
-        {getDefective() !== 0 && (
-          <div className="py-2">
+        <p className="font-bold text-2xl pt-3">Final remarks</p>
+        {getDefective().length === 0 && <p>No defective tooth present.</p>}
+        {getDefective().length !== 0 && (
+          <div className="pb-3">
             <p className="font-medium pb-1">Defects have been found in:</p>
             {getDefective().map((tooth, index) => {
               return (
@@ -348,7 +349,7 @@ export default function PatientDetails({
           pauseOnHover
         />
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 removeFromPrint">
         <button
           disabled={!save}
           className="px-6 py-2 bg-emerald-700 text-white text-xl rounded disabled:bg-emerald-300"
@@ -358,7 +359,12 @@ export default function PatientDetails({
         </button>
         <button
           className="px-6 py-2 bg-yellow-600 text-white text-xl rounded"
-          onClick={() => window.print()}
+          onClick={() => {
+            const bodyElement = document.getElementsByTagName("body")[0];
+            bodyElement.classList.add("printing");
+            window.print();
+            bodyElement.classList.remove("printing");
+          }}
         >
           Download Report
         </button>
