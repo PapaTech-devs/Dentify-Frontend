@@ -10,7 +10,6 @@ import { useUserData } from "../hooks/userHooks.js";
 import { useAuth } from "../hooks/contextHooks.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { logDOM } from "@testing-library/react";
 
 export default function ShowAppoinments({
   selectedDate,
@@ -196,12 +195,12 @@ export default function ShowAppoinments({
                     await deleteAppointment(selectedUser.userid, appointment);
                     setUserData(
                       userData.map(function (user) {
-                        if (user.userid == selectedUser.userid) {
+                        if (user.userid === selectedUser.userid) {
                           user.appointments = user.appointments.filter(
                             (tempAppointment) => {
                               console.log(tempAppointment);
                               return (
-                                tempAppointment.patientid !=
+                                tempAppointment.patientid !==
                                 appointment.patientid
                               );
                             }

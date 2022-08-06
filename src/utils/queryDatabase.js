@@ -195,7 +195,7 @@ export async function updatePatient(uid, key, value) {
 
 export async function deleteAppointment(userid, appointment) {
   try {
-    const response = await fetch(`${URL}/users/deleteAppointment/${userid}`, {
+    await fetch(`${URL}/users/deleteAppointment/${userid}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
