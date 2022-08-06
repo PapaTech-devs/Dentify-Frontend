@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { storePatient } from "../utils/queryDatabase";
+import Select from "react-select";
 
 const INPUT_STYLE = `form-control block
         w-55
@@ -25,23 +26,25 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
     age: "",
     mobile_number: "",
     address: "",
+    sex: "",
   };
   const [values, setValues] = useState(initialValues);
   const [loading, setLoading] = useState(false);
   const [errors, setError] = useState({
     name: null,
-    email: null,
+    //email: null,
     age: null,
-    mobile_number: null,
-    address: null,
+    sex: null,
+    //mobile_number: null,
+    //address: null,
   });
 
-  const validateEmail = (email) => {
-    // eslint-disable-next-line
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-      email.toLowerCase()
-    );
-  };
+  // const validateEmail = (email) => {
+  //   // eslint-disable-next-line
+  //   return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+  //     email.toLowerCase()
+  //   );
+  // };
 
   function makeid(length) {
     var result = "";
@@ -63,21 +66,11 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
   };
 
   const handleSubmit = async () => {
-    console.log("Submitted", values);
     const errorObject = {
       name: null,
-      email: null,
       age: null,
-      mobile_number: null,
-      address: null,
+      sex: null,
     };
-
-    // check for email
-    if (!validateEmail(values.email)) {
-      errorObject.email = "Enter a valid email";
-    } else {
-      errorObject.email = null;
-    }
 
     // check for full name
     if (values.name.length <= 6) {
@@ -86,18 +79,11 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
       errorObject.name = null;
     }
 
-    // check for address
-    if (values.address.length <= 6) {
-      errorObject.address = "Please enter address";
+    // check for sex
+    if (values.sex.length === 0) {
+      errorObject.sex = "Please select your gender";
     } else {
-      errorObject.address = null;
-    }
-
-    // check for mobile number
-    if (values.mobile_number.length < 10) {
-      errorObject.mobile_number = "Please enter your mobile number";
-    } else {
-      errorObject.mobile_number = null;
+      errorObject.sex = null;
     }
 
     // check for age
@@ -108,13 +94,7 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
     }
 
     setError(errorObject);
-    if (
-      errorObject.email ||
-      errorObject.age ||
-      errorObject.name ||
-      errorObject.mobile_number ||
-      errorObject.address
-    ) {
+    if (errorObject.sex || errorObject.age || errorObject.name) {
       return;
     }
 
@@ -146,14 +126,6 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
                   <h3 className="text-3xl font-semibold">
                     Add patient details
                   </h3>
-                  {/* <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setNewFormState(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button> */}
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
@@ -193,7 +165,7 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
                         type="text"
                         className={INPUT_STYLE}
                         name="mobile_number"
-                        placeholder="Enter Mobile Number"
+                        placeholder="MobileNumber(Optional)"
                         onChange={handleInputChange}
                       ></input>
                     </div>
@@ -205,9 +177,27 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
                         type="text"
                         className={INPUT_STYLE}
                         name="email"
-                        placeholder="Enter email"
+                        placeholder="Enter email(Optional)"
                         onChange={handleInputChange}
                       ></input>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-sm text-red-400 font-semibold">
+                        {errors.sex}
+                      </p>
+                      <Select
+                        options={[
+                          { value: "male", label: "Male" },
+                          { value: "female", label: "Female" },
+                          { value: "others", label: "Others" },
+                        ]}
+                        onChange={(e) => {
+                          setValues({
+                            ...values,
+                            sex: e.value,
+                          });
+                        }}
+                      />
                     </div>
                     <div className="flex flex-col">
                       <p className="text-sm text-red-400 font-semibold">
@@ -217,7 +207,7 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
                         type="text"
                         className={INPUT_STYLE}
                         name="address"
-                        placeholder="Enter address"
+                        placeholder="Enter address(Optional)"
                         onChange={handleInputChange}
                       ></input>
                     </div>
