@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import AppointmentForm from "./AppointmentForm.js";
 import NewAppointment from "./NewAppointment.js";
-import { updateUserAppointment, getPatient } from "../utils/queryDatabase.js";
+import {
+  updateUserAppointment,
+  getPatient,
+  deleteAppointment,
+} from "../utils/queryDatabase.js";
 import { useUserData } from "../hooks/userHooks.js";
 import { useAuth } from "../hooks/contextHooks.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { logDOM } from "@testing-library/react";
 
 export default function ShowAppoinments({
   selectedDate,
@@ -17,11 +22,13 @@ export default function ShowAppoinments({
   const [appoinment, setAppointment] = useState({});
   const [userData, setUserData] = useUserData();
   const { authUser, setAuthUser } = useAuth();
+
   if (!selectedUser.value) console.log("Appoinment of ", selectedUser.name);
   else console.log("Appoinment of ", selectedUser.value);
   console.log("Selected users appointments:", userAppointments);
 
   async function onSubmit(e, patientid) {
+    // console.log("submitting");
     if (e) e.preventDefault();
     try {
       if (patientid) {
@@ -29,7 +36,8 @@ export default function ShowAppoinments({
       }
       const cpatient = await getPatient(appoinment.patientid);
       appoinment["Date"] = selectedDate.toDateString();
-      // console.log("current patient", cpatient, appoinment);
+      appoinment["patientName"] = cpatient.name;
+      console.log("current patient", cpatient.name, appoinment);
       // console.log("For Dr", selectedUser.name, selectedUser.userid);
       if (
         cpatient &&
@@ -52,7 +60,7 @@ export default function ShowAppoinments({
           const tempAuthUser = authUser;
           setAuthUser(tempAuthUser);
         }
-        const newList = userData.map((tempuser) => {
+        const newList = userData.map((tempuser, index) => {
           if (tempuser.userid === userWithNewAppointment.userid) {
             tempuser = userWithNewAppointment;
           }
@@ -173,11 +181,39 @@ export default function ShowAppoinments({
         {userAppointments.map((appointment, index) => {
           if (selectedDate.toDateString() === appointment.Date)
             return (
-              <div
-                className="block p-3 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 text-center w-full font-semibold"
-                key={index}
-              >
-                {appointment.patientid}
+              <div className="flex" key={index}>
+                <div
+                  className="block p-3 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 text-center w-full font-semibold"
+                  key={index}
+                >
+                  <CheckBox />
+                  {appointment.patientName}
+                </div>
+                <button
+                  className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm border border-1 border-red-500 rounded-xl m-1 focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={async () => {
+                    await deleteAppointment(selectedUser.userid, appointment);
+                    setUserData(
+                      userData.map(function (user) {
+                        if (user.userid == selectedUser.userid) {
+                          user.appointments = user.appointments.filter(
+                            (tempAppointment) => {
+                              console.log(tempAppointment);
+                              return (
+                                tempAppointment.patientid !=
+                                appointment.patientid
+                              );
+                            }
+                          );
+                        }
+                        return user;
+                      })
+                    );
+                  }}
+                >
+                  Delete
+                </button>
               </div>
             );
           else return <div key={index}></div>;
@@ -185,4 +221,11 @@ export default function ShowAppoinments({
       </div>
     </div>
   );
+}
+function CheckBox() {
+  const [checked, setChecked] = useState(false);
+  const handleChange = () => {
+    setChecked(!checked);
+  };
+  return <input type="checkbox" checked={checked} onChange={handleChange} />;
 }
