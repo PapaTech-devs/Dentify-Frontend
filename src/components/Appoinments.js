@@ -210,6 +210,15 @@ export default function ShowAppoinments({
                         return user;
                       })
                     );
+                    toast.success(`Appointment deleted`, {
+                      position: "top-right",
+                      autoClose: 3500,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: false,
+                      draggable: false,
+                      progress: undefined,
+                    });
                   }}
                 >
                   Delete
@@ -219,6 +228,17 @@ export default function ShowAppoinments({
           else return <div key={index}></div>;
         })}
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+      />
     </div>
   );
 }

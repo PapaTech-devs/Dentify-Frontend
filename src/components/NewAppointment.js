@@ -186,6 +186,7 @@ function NewAppointment({ newFormState, setNewFormState, onPatientSaved }) {
                         {errors.sex}
                       </p>
                       <Select
+                        placeholder="Select gender"
                         options={[
                           { value: "male", label: "Male" },
                           { value: "female", label: "Female" },
