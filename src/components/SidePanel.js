@@ -35,7 +35,8 @@ export default function SidePanel({ index, setIndex }) {
           Your appointments
         </p>
       </div>
-      {authUser.role.includes("admin") && authUser.role.includes("moderator") && (
+      {(authUser.role.includes("admin") ||
+        authUser.role.includes("moderator")) && (
         <div
           className={`transition duration-150 ease-in-out md:hover:scale-105 px-4 py-2 ${
             index === 4 && "bg-slate-400"

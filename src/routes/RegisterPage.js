@@ -17,7 +17,6 @@ export default function RegisterPage() {
     confirmPassword: null,
     mobileNumber: null,
     sex: null,
-    organization: null,
     registrationNo: null,
     designation: null,
   });
@@ -32,7 +31,6 @@ export default function RegisterPage() {
   });
   const [mobileNumber, setMobileNumber] = useState("");
   const [sex, setSex] = useState("");
-  const [organization, setOrganization] = useState("");
   const [doctor, setDoctor] = useState(false);
 
   const handleInputChange = (e) => {
@@ -61,7 +59,6 @@ export default function RegisterPage() {
       confirmPassword: null,
       mobileNumber: null,
       sex: null,
-      organization: null,
       registrationNo: null,
       designation: null,
     };
@@ -101,13 +98,6 @@ export default function RegisterPage() {
       errorObject.age = null;
     }
 
-    // check for organization
-    if (organization.length === 0) {
-      errorObject.organization = "Please select your organization";
-    } else {
-      errorObject.organization = null;
-    }
-
     // check for password
     if (values.password.length <= 6) {
       errorObject.password = "Please enter a password of length 7 or more";
@@ -143,7 +133,6 @@ export default function RegisterPage() {
       errorObject.age ||
       errorObject.fullName ||
       errorObject.mobileNumber ||
-      errorObject.organization ||
       errorObject.password ||
       errorObject.sex ||
       (doctor && (errorObject.designation || errorObject.registrationNo))
@@ -154,7 +143,6 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       values.mobileNumber = mobileNumber;
-      values.organization = organization;
       values.sex = sex;
       values.role = doctor ? ["doctor"] : ["moderator"];
       const userid = await createUser(values.email, values.password);
@@ -271,24 +259,6 @@ export default function RegisterPage() {
               )}
             </div>
           </div>
-          <select
-            className="py-2 px-3 w-full focus:outline-1 outline-gray-500 text-lg bg-slate-100 rounded-sm"
-            name="organization"
-            value={organization}
-            onChange={(e) => setOrganization(e.target.value)}
-          >
-            <option value="">Select Organization</option>
-            <option value="organization1">Organization A</option>
-            <option value="organization2">Organization B</option>
-            <option value="organization3">Organization C</option>
-          </select>
-          {errors.organization ? (
-            <p className="text-red-500 font-semibold self-start">
-              {errors.organization}
-            </p>
-          ) : (
-            <></>
-          )}
           <div className="flex space-x-4 items-center">
             <p className="text-lg">Are you a doctor?</p>
             <input

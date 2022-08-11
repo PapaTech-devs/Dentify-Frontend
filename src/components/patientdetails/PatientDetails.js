@@ -330,7 +330,7 @@ export default function PatientDetails({
                         side.split("").splice(1, side.length).join("")}{" "}
                     </p>
                   ))}
-                  face(s).
+                  aspect(s).
                 </div>
               );
             })}

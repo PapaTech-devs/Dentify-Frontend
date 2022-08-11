@@ -180,16 +180,16 @@ export default function ShowAppoinments({
         {userAppointments.map((appointment, index) => {
           if (selectedDate.toDateString() === appointment.Date)
             return (
-              <div className="flex" key={index}>
+              <div className="flex items-center space-x-2" key={index}>
                 <div
-                  className="block p-3 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 text-center w-full font-semibold"
+                  className="flex items-center space-x-2 p-3 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 text-center w-full font-semibold"
                   key={index}
                 >
                   <CheckBox />
-                  {appointment.patientName}
+                  <p>{appointment.patientName}</p>
                 </div>
                 <button
-                  className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm border border-1 border-red-500 rounded-xl m-1 focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="text-red-500 hover:text-white hover:bg-red-500 font-bold uppercase px-6 py-3 text-sm border border-1 border-red-500 rounded focus:outline-none ease-linear transition-all duration-150"
                   type="button"
                   onClick={async () => {
                     await deleteAppointment(selectedUser.userid, appointment);
@@ -246,5 +246,12 @@ function CheckBox() {
   const handleChange = () => {
     setChecked(!checked);
   };
-  return <input type="checkbox" checked={checked} onChange={handleChange} />;
+  return (
+    <input
+      className="w-5 h-5"
+      type="checkbox"
+      checked={checked}
+      onChange={handleChange}
+    />
+  );
 }
