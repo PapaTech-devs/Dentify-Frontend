@@ -5,6 +5,7 @@ import { getAllUserAppointments, getAllUsers } from "../../utils/queryDatabase";
 import InfiniteLoading from "../../utils/InfiniteLoading";
 import PatientList from "./PatientList";
 import PatientDetails from "../patientdetails/PatientDetails";
+import { useAuth } from "../../hooks/contextHooks";
 
 export default function YourAppointments() {
   const [userData, setUserData] = useUserData();
@@ -13,6 +14,9 @@ export default function YourAppointments() {
   const [patients, setPatients] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showDetails, setShowDetails] = useState(null);
+  const { authUser } = useAuth();
+
+  console.log("authUser", authUser);
 
   function getaDoctor(list) {
     return list.filter((user) => user.role.includes("doctor"))[0];
@@ -22,15 +26,27 @@ export default function YourAppointments() {
     async function fetchUsers() {
       const list = await getAllUsers();
       setUserData(list);
-      setDoctors(list.filter((user) => user.role.includes("doctor")));
-      const doctor = getaDoctor(list);
-      setSelectedOption({ value: doctor, label: doctor.name });
+      if (authUser.role.includes("admin")) {
+        setDoctors(list.filter((user) => user.role.includes("doctor")));
+        const doctor = getaDoctor(list);
+        setSelectedOption({ value: doctor, label: doctor.name });
+      } else {
+        setDoctors([authUser]);
+        const doctor = authUser;
+        setSelectedOption({ value: doctor, label: doctor.name });
+      }
     }
     if (userData.length === 0) fetchUsers();
     else {
-      const doctor = getaDoctor(userData);
-      setSelectedOption({ value: doctor, label: doctor.name });
-      setDoctors(userData.filter((user) => user.role.includes("doctor")));
+      if (authUser.role.includes("admin")) {
+        const doctor = getaDoctor(userData);
+        setSelectedOption({ value: doctor, label: doctor.name });
+        setDoctors(userData.filter((user) => user.role.includes("doctor")));
+      } else {
+        setDoctors([authUser]);
+        const doctor = authUser;
+        setSelectedOption({ value: doctor, label: doctor.name });
+      }
     }
     // eslint-disable-next-line
   }, []);

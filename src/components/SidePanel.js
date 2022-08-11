@@ -1,6 +1,8 @@
 import React from "react";
+import { useAuth } from "../hooks/contextHooks";
 
 export default function SidePanel({ index, setIndex }) {
+  const { authUser } = useAuth();
   return (
     <div className="md:min-h-screen w-full md:w-64 bg-slate-700 flex flex-row md:flex-col items-center justify-center md:justify-start md:space-y-4 py-6">
       <div
@@ -33,16 +35,18 @@ export default function SidePanel({ index, setIndex }) {
           Your appointments
         </p>
       </div>
-      <div
-        className={`transition duration-150 ease-in-out md:hover:scale-105 px-4 py-2 ${
-          index === 4 && "bg-slate-400"
-        } md:rounded-full rounded-lg cursor-pointer text-center`}
-        onClick={() => setIndex(4)}
-      >
-        <p className="text-sm md:text-lg font-semibold text-white">
-          All patients
-        </p>
-      </div>
+      {authUser.role.includes("admin") && authUser.role.includes("moderator") && (
+        <div
+          className={`transition duration-150 ease-in-out md:hover:scale-105 px-4 py-2 ${
+            index === 4 && "bg-slate-400"
+          } md:rounded-full rounded-lg cursor-pointer text-center`}
+          onClick={() => setIndex(4)}
+        >
+          <p className="text-sm md:text-lg font-semibold text-white">
+            All patients
+          </p>
+        </div>
+      )}
     </div>
   );
 }
