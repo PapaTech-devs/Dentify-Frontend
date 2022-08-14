@@ -16,7 +16,7 @@ export default function YourAppointments() {
   const [showDetails, setShowDetails] = useState(null);
   const { authUser } = useAuth();
 
-  console.log("authUser", authUser);
+  // console.log("authUser", authUser);
 
   function getaDoctor(list) {
     return list.filter((user) => user.role.includes("doctor"))[0];

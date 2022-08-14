@@ -12,13 +12,13 @@ export default function ShowCalendar() {
   const [cdate, onChange] = useState(new Date());
   const [cuser, setUser] = useState(authUser);
 
-  console.log("list of users: ", userData);
+  // console.log("list of users: ", userData);
 
-  console.log("cuser: ", cuser);
+  // console.log("cuser: ", cuser);
 
   let Options = [];
   if (!authUser.role.includes("moderator")) {
-    console.log("Users other than a moderator view");
+    // console.log("Users other than a moderator view");
     let singleOption = {};
     singleOption["value"] = authUser.userid;
     singleOption["label"] = authUser.name;
@@ -40,10 +40,10 @@ export default function ShowCalendar() {
     return user.userid === cuser.value || user.userid === cuser.userid;
   });
   let selectedUserAppointments = selectedUserData.appointments;
-  console.log("selectedUserData", selectedUserData);
+  // console.log("selectedUserData", selectedUserData);
   // let selectedUserAppointments = selectedUserData.appointments;
-  console.log("userOptions", Options);
-  console.log("current user", authUser.name);
+  // console.log("userOptions", Options);
+  // console.log("current user", authUser.name);
   return (
     <div className="grid-cols-1 gap-5 inline-grid px-14 md:grid-cols-2 p-4">
       <div className="flex items-center flex-col space-y-3">

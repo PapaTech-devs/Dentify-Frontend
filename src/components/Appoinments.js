@@ -22,9 +22,9 @@ export default function ShowAppoinments({
   const [userData, setUserData] = useUserData();
   const { authUser, setAuthUser } = useAuth();
 
-  if (!selectedUser.value) console.log("Appoinment of ", selectedUser.name);
-  else console.log("Appoinment of ", selectedUser.value);
-  console.log("Selected users appointments:", userAppointments);
+  // if (!selectedUser.value) console.log("Appoinment of ", selectedUser.name);
+  // else console.log("Appoinment of ", selectedUser.value);
+  // console.log("Selected users appointments:", userAppointments);
 
   async function onSubmit(e, patientid) {
     // console.log("submitting");
@@ -36,7 +36,7 @@ export default function ShowAppoinments({
       const cpatient = await getPatient(appoinment.patientid);
       appoinment["Date"] = selectedDate.toDateString();
       appoinment["patientName"] = cpatient.name;
-      console.log("current patient", cpatient.name, appoinment);
+      // console.log("current patient", cpatient.name, appoinment);
       // console.log("For Dr", selectedUser.name, selectedUser.userid);
       if (
         cpatient &&
@@ -53,7 +53,7 @@ export default function ShowAppoinments({
           selectedUser.userid,
           appoinment
         );
-        console.log(userWithNewAppointment);
+        // console.log(userWithNewAppointment);
 
         if (userWithNewAppointment.userid === authUser.userid) {
           const tempAuthUser = authUser;
@@ -119,7 +119,6 @@ export default function ShowAppoinments({
         <div className="inline-flex" role="group">
           <button
             onClick={() => {
-              console.log("clicked");
               setFormState(true);
               setNewFormState(false);
             }}
@@ -131,7 +130,6 @@ export default function ShowAppoinments({
 
           <button
             onClick={() => {
-              console.log("clicked");
               setNewFormState(true);
               setFormState(false);
             }}
@@ -198,7 +196,6 @@ export default function ShowAppoinments({
                         if (user.userid === selectedUser.userid) {
                           user.appointments = user.appointments.filter(
                             (tempAppointment) => {
-                              console.log(tempAppointment);
                               return (
                                 tempAppointment.patientid !==
                                 appointment.patientid

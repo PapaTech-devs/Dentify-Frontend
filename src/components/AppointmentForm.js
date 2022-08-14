@@ -15,8 +15,6 @@ export default function AppointmentForm({
     });
   };
 
-  console.log(appoinment);
-
   return (
     <div className="flex items-center justify-center">
       <form
