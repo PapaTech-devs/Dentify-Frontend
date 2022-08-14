@@ -32,6 +32,17 @@ export default function PatientDetails({
   const [description, setDescription] = useState(
     patient.report.additionalDescription
   );
+  const [treatmentCost, setTreatmentCost] = useState(
+    patient.report.treatmentCost
+  );
+  const [doctorFees, setDoctorFees] = useState(
+    patient.report.totalExpenseOfDoctor
+  );
+  const [paymentHistory, setPaymentHistory] = useState(
+    patient.report.paymentHistory
+  );
+  const [amount, setAmount] = useState(0);
+  const [date, setDate] = useState("");
 
   useEffect(() => {
     let list = [];
@@ -81,7 +92,13 @@ export default function PatientDetails({
       BOP: bop,
       additionalDescription: description,
       tooth: temp,
+      treatmentCost: treatmentCost,
+      totalPaid: getTotalPaid().toString(),
+      due: getDue().toString(),
+      totalExpenseOfDoctor: doctorFees,
+      paymentHistory: paymentHistory,
     };
+
     setSave(false);
     const newPatient = await updatePatient(patient.patientid, "report", obj);
     temp = patientList.map((p) => {
@@ -97,6 +114,26 @@ export default function PatientDetails({
       draggable: true,
       progress: undefined,
     });
+  }
+
+  function getTotalPaid() {
+    let temp = 0;
+    if (!paymentHistory || paymentHistory.length === 0) return temp;
+    for (let payment of paymentHistory) {
+      temp += parseFloat(payment.paidAmount);
+    }
+    return temp;
+  }
+
+  function getDue() {
+    let temp = 0;
+    let cost = treatmentCost ? parseFloat(treatmentCost) : 0;
+    if (!paymentHistory || paymentHistory.length === 0) return cost - temp;
+    for (let payment of paymentHistory) {
+      temp += parseFloat(payment.paidAmount);
+    }
+    temp = cost - temp;
+    return temp;
   }
 
   function getLabel(text) {
@@ -276,7 +313,6 @@ export default function PatientDetails({
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => {
               const toothName = getLabel(quadrant) + id.toString();
-              // console.log(toothName, toothList[toothName]);
               return (
                 <div
                   key={toothName}
@@ -336,6 +372,143 @@ export default function PatientDetails({
             })}
           </div>
         )}
+
+        <div className="flex items-center justify-between pt-28">
+          <p className="font-bold text-2xl">Payment History</p>
+          <button
+            className="py-1 px-2 bg-red-500 text-white rounded removeFromPrint"
+            onClick={() => {
+              setPaymentHistory([]);
+              setDoctorFees("");
+              setTreatmentCost("");
+              setSave(true);
+            }}
+          >
+            Reset
+          </button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 mb-2">
+          <div>
+            <p className="font-semibold text-xl my-2">Treatment Cost</p>
+            <div className="flex space-x-2 items-center">
+              <p className="font-semibold text-lg">Rs</p>
+              <input
+                className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+                type="number"
+                value={treatmentCost ? parseFloat(treatmentCost) : 0}
+                onChange={(text) => {
+                  setSave(true);
+                  setTreatmentCost(text.target.value);
+                }}
+              />
+            </div>
+          </div>
+          <div className="removeFromPrint">
+            <p className="font-semibold text-xl my-2">
+              Total Expense of Doctor
+            </p>
+            <div className="flex space-x-2 items-center">
+              <p className="font-semibold text-lg">Rs</p>
+              <input
+                className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+                type="number"
+                value={doctorFees ? parseFloat(doctorFees) : 0}
+                onChange={(text) => {
+                  setSave(true);
+                  setDoctorFees(text.target.value);
+                }}
+              />
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-xl my-2">Total Paid</p>
+            <div className="flex space-x-2 items-center">
+              <p className="font-semibold text-lg">Rs {getTotalPaid()}</p>
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-xl my-2">Total Due</p>
+            <div className="flex space-x-2 items-center">
+              <p className="font-semibold text-lg">Rs {getDue()}</p>
+            </div>
+          </div>
+        </div>
+        <div className="pb-4 removeFromPrint">
+          <p className="font-semibold text-xl my-2">Add Payment</p>
+          <div>
+            <div className="flex space-x-2 items-center">
+              <p className="font-semibold text-lg">Rs</p>
+              <input
+                className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+                type="number"
+                value={amount}
+                onChange={(text) => {
+                  setAmount(text.target.value);
+                }}
+              />
+              <input
+                className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+                type="date"
+                value={date}
+                onChange={(text) => {
+                  setDate(text.target.value);
+                }}
+              />
+              <button
+                className="px-6 py-2 bg-blue-500 text-white text-lg rounded disabled:bg-blue-300"
+                onClick={() => {
+                  if (amount !== 0 && date.length !== 0) {
+                    setSave(true);
+                    paymentHistory.push({
+                      paidAmount: amount,
+                      paymentDate: new Date(date).toDateString(),
+                    });
+                    setPaymentHistory(paymentHistory);
+                    setAmount(0);
+                    setDate("");
+                  }
+                }}
+              >
+                ADD
+              </button>
+            </div>
+            <p className="font-semibold py-2 text-lg">Payment History</p>
+            {paymentHistory.length !== 0 ? (
+              paymentHistory
+                .sort((a, b) => {
+                  a = new Date(a).getDay();
+                  b = new Date(b).getDay();
+                  return a > b;
+                })
+                .map((payment, index) => (
+                  <div className="flex space-x-2 py-1">
+                    <p key={payment.paymentDate + index.toString()}>
+                      Rs {payment.paidAmount} on {payment.paymentDate}
+                    </p>
+                    <button
+                      className="py-1 px-2 bg-red-500 text-white rounded removeFromPrint"
+                      onClick={() => {
+                        setSave(true);
+                        setPaymentHistory(
+                          paymentHistory.filter(
+                            (temp) =>
+                              !(
+                                temp.paidAmount === payment.paidAmount &&
+                                temp.paymentDate === payment.paymentDate
+                              )
+                          )
+                        );
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))
+            ) : (
+              <p className="italic font-thin">No payments available</p>
+            )}
+          </div>
+        </div>
 
         <ToastContainer
           position="top-right"
