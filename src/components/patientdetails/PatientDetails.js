@@ -7,6 +7,7 @@ import InfiniteLoading from "../../utils/InfiniteLoading";
 import ToothBox from "./ToothBox";
 import { updatePatient } from "../../utils/queryDatabase";
 import Select from "react-select";
+import { useAuth } from "../../hooks/contextHooks";
 
 export default function PatientDetails({
   patient,
@@ -15,6 +16,7 @@ export default function PatientDetails({
   patientList,
 }) {
   const [toothList, setToothList] = useState(null);
+  const { authUser } = useAuth();
   const quadrants = ["Upper Right", "Upper Left", "Lower Right", "Lower Left"];
   const qMap = {
     UR: "Upper Right",
@@ -372,143 +374,150 @@ export default function PatientDetails({
             })}
           </div>
         )}
-
-        <div className="flex items-center justify-between pt-28">
-          <p className="font-bold text-2xl">Payment History</p>
-          <button
-            className="py-1 px-2 bg-red-500 text-white rounded removeFromPrint"
-            onClick={() => {
-              setPaymentHistory([]);
-              setDoctorFees("");
-              setTreatmentCost("");
-              setSave(true);
-            }}
-          >
-            Reset
-          </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 mb-2">
-          <div>
-            <p className="font-semibold text-xl my-2">Treatment Cost</p>
-            <div className="flex space-x-2 items-center">
-              <p className="font-semibold text-lg">Rs</p>
-              <input
-                className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
-                type="number"
-                value={treatmentCost ? parseFloat(treatmentCost) : 0}
-                onChange={(text) => {
-                  setSave(true);
-                  setTreatmentCost(text.target.value);
-                }}
-              />
-            </div>
-          </div>
-          <div className="removeFromPrint">
-            <p className="font-semibold text-xl my-2">
-              Total Expense of Doctor
-            </p>
-            <div className="flex space-x-2 items-center">
-              <p className="font-semibold text-lg">Rs</p>
-              <input
-                className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
-                type="number"
-                value={doctorFees ? parseFloat(doctorFees) : 0}
-                onChange={(text) => {
-                  setSave(true);
-                  setDoctorFees(text.target.value);
-                }}
-              />
-            </div>
-          </div>
-          <div>
-            <p className="font-semibold text-xl my-2">Total Paid</p>
-            <div className="flex space-x-2 items-center">
-              <p className="font-semibold text-lg">Rs {getTotalPaid()}</p>
-            </div>
-          </div>
-          <div>
-            <p className="font-semibold text-xl my-2">Total Due</p>
-            <div className="flex space-x-2 items-center">
-              <p className="font-semibold text-lg">Rs {getDue()}</p>
-            </div>
-          </div>
-        </div>
-        <div className="pb-4 removeFromPrint">
-          <p className="font-semibold text-xl my-2">Add Payment</p>
-          <div>
-            <div className="flex space-x-2 items-center">
-              <p className="font-semibold text-lg">Rs</p>
-              <input
-                className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
-                type="number"
-                value={amount}
-                onChange={(text) => {
-                  setAmount(text.target.value);
-                }}
-              />
-              <input
-                className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
-                type="date"
-                value={date}
-                onChange={(text) => {
-                  setDate(text.target.value);
-                }}
-              />
+        {(authUser.role.includes("admin") ||
+          authUser.role.includes("moderator")) && (
+          <>
+            <div className="flex items-center justify-between pt-28">
+              <p className="font-bold text-2xl">Payment History</p>
               <button
-                className="px-6 py-2 bg-blue-500 text-white text-lg rounded disabled:bg-blue-300"
+                className="px-4 py-2 bg-red-500 text-white rounded removeFromPrint text-lg"
                 onClick={() => {
-                  if (amount !== 0 && date.length !== 0) {
-                    setSave(true);
-                    paymentHistory.push({
-                      paidAmount: amount,
-                      paymentDate: new Date(date).toDateString(),
-                    });
-                    setPaymentHistory(paymentHistory);
-                    setAmount(0);
-                    setDate("");
-                  }
+                  setPaymentHistory([]);
+                  setDoctorFees("");
+                  setTreatmentCost("");
+                  setSave(true);
                 }}
               >
-                ADD
+                Reset
               </button>
             </div>
-            <p className="font-semibold py-2 text-lg">Payment History</p>
-            {paymentHistory.length !== 0 ? (
-              paymentHistory
-                .sort((a, b) => {
-                  a = new Date(a).getDay();
-                  b = new Date(b).getDay();
-                  return a > b;
-                })
-                .map((payment, index) => (
-                  <div className="flex space-x-2 py-1">
-                    <p key={payment.paymentDate + index.toString()}>
-                      Rs {payment.paidAmount} on {payment.paymentDate}
-                    </p>
-                    <button
-                      className="py-1 px-2 bg-red-500 text-white rounded removeFromPrint"
-                      onClick={() => {
+            <div className="grid grid-cols-1 md:grid-cols-4 mb-2">
+              <div>
+                <p className="font-semibold text-xl my-2">Treatment Cost</p>
+                <div className="flex space-x-2 items-center">
+                  <p className="font-semibold text-lg">Rs</p>
+                  <input
+                    className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+                    type="number"
+                    value={treatmentCost ? parseFloat(treatmentCost) : 0}
+                    onChange={(text) => {
+                      setSave(true);
+                      setTreatmentCost(text.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="removeFromPrint">
+                <p className="font-semibold text-xl my-2">
+                  Total Expense of Doctor
+                </p>
+                <div className="flex space-x-2 items-center">
+                  <p className="font-semibold text-lg">Rs</p>
+                  <input
+                    className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+                    type="number"
+                    value={doctorFees ? parseFloat(doctorFees) : 0}
+                    onChange={(text) => {
+                      setSave(true);
+                      setDoctorFees(text.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+              <div>
+                <p className="font-semibold text-xl my-2">Total Paid</p>
+                <div className="flex space-x-2 items-center">
+                  <p className="font-semibold text-lg">Rs {getTotalPaid()}</p>
+                </div>
+              </div>
+              <div>
+                <p className="font-semibold text-xl my-2">Total Due</p>
+                <div className="flex space-x-2 items-center">
+                  <p className="font-semibold text-lg">Rs {getDue()}</p>
+                </div>
+              </div>
+            </div>
+            <div className="pb-4 removeFromPrint">
+              <p className="font-semibold text-xl my-2">Add Payment</p>
+              <div>
+                <div className="flex space-x-2 items-center">
+                  <p className="font-semibold text-lg">Rs</p>
+                  <input
+                    className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+                    type="number"
+                    value={amount}
+                    onChange={(text) => {
+                      setAmount(text.target.value);
+                    }}
+                  />
+                  <input
+                    className="p-2 border border-1 border-gray-500 rounded w-full md:w-auto"
+                    type="date"
+                    value={date}
+                    onChange={(text) => {
+                      setDate(text.target.value);
+                    }}
+                  />
+                  <button
+                    className="px-6 py-2 bg-blue-500 text-white text-lg rounded disabled:bg-blue-300"
+                    onClick={() => {
+                      if (amount !== 0 && date.length !== 0) {
                         setSave(true);
-                        setPaymentHistory(
-                          paymentHistory.filter(
-                            (temp) =>
-                              !(
-                                temp.paidAmount === payment.paidAmount &&
-                                temp.paymentDate === payment.paymentDate
+                        paymentHistory.push({
+                          paidAmount: amount,
+                          paymentDate: new Date(date).toDateString(),
+                        });
+                        setPaymentHistory(paymentHistory);
+                        setAmount(0);
+                        setDate("");
+                      }
+                    }}
+                  >
+                    ADD
+                  </button>
+                </div>
+                <p className="font-semibold py-2 text-xl">Payment History</p>
+                {paymentHistory.length !== 0 ? (
+                  paymentHistory
+                    .sort((a, b) => {
+                      a = new Date(a.paymentDate).getDate();
+                      b = new Date(b.paymentDate).getDate();
+                      return a < b;
+                    })
+                    .map((payment, index) => (
+                      <div
+                        key={payment.paymentDate + index.toString()}
+                        className="flex items-center justify-between py-1 w-full md:w-96"
+                      >
+                        <p>
+                          Rs {payment.paidAmount} on {payment.paymentDate}
+                        </p>
+                        <button
+                          className="py-1 px-2 bg-red-500 text-white rounded removeFromPrint"
+                          onClick={() => {
+                            setSave(true);
+                            setPaymentHistory(
+                              paymentHistory.filter(
+                                (temp) =>
+                                  !(
+                                    temp.paidAmount === payment.paidAmount &&
+                                    temp.paymentDate === payment.paymentDate
+                                  )
                               )
-                          )
-                        );
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                ))
-            ) : (
-              <p className="italic font-thin">No payments available</p>
-            )}
-          </div>
-        </div>
+                            );
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ))
+                ) : (
+                  <p className="italic font-thin">No payments available</p>
+                )}
+              </div>
+            </div>
+          </>
+        )}
 
         <ToastContainer
           position="top-right"
@@ -522,7 +531,7 @@ export default function PatientDetails({
           pauseOnHover
         />
       </div>
-      <div className="flex items-center space-x-4 removeFromPrint">
+      <div className="flex items-center space-x-4 pt-2 removeFromPrint">
         <button
           disabled={!save}
           className="px-6 py-2 bg-emerald-700 text-white text-xl rounded disabled:bg-emerald-300"
