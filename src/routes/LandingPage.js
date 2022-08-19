@@ -5,15 +5,15 @@ export default function LandingPage() {
   return (
     <>
       <div className="h-full px-4 md:px-10 md:flex flex-col items-start justify-evenly my-4 md:my-0">
-        <p className="text-2xl font-light">
+        <div className="text-2xl font-light md:pb-0 md:pt-0 pb-8 pt-4">
           <p className="inline font-black">Dentify</p> is a dental clinic
           management software where you can manage your patients, doctors and
           other staffs. Along with that you can create appointments and keep
           track of payments as well.
-        </p>
+        </div>
         <div className="flex flex-col">
-          <p className="text-2xl font-bold pb-8">KEY FEATURES</p>
-          <div className="md:flex md:items-center">
+          <p className="text-2xl font-bold md:pb-8 pb-4">KEY FEATURES</p>
+          <div className="md:flex md:items-center md:pb-0 pb-8">
             <div className="md:w-5/6">
               <p className="text-xl font-semibold py-2">
                 Create and track appointments
@@ -41,11 +41,11 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <p className="text-xl">
+        <div className="text-xl">
           To <p className="inline font-bold">Get Started</p> register as your
           respective role and fill out all details. After that contact your
           organization admin to accept your profile.
-        </p>
+        </div>
       </div>
       <Footer />
     </>
