@@ -11,7 +11,7 @@ export default function Footer() {
         <p className="text-white text-2xl font-bold self-start">Contacts</p>
         <p className="text-white font-thin">
           developed by{" "}
-          <a href="/" className="font-semibold">
+          <a href="https://debapriya-source.github.io/PapaTech" className="font-semibold">
             @PapaTech
           </a>
         </p>
