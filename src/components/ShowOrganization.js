@@ -35,7 +35,7 @@ export default function ShowOrganization() {
     <div className="w-full h-full md:p-8 p-4 space-y-4">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <p className="text-2xl md:text-3xl pb-4 md:pb-0 font-bold text-center">
-          Tulip Medical Organization
+          Suchetan Mondal's Organization
         </p>
         <div className="flex items-center mr-3 space-x-3">
           <p className="md:text-lg">
